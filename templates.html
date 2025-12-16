@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO Meta Tags -->
+    <title>Premium Website Templates - Calius Digital</title>
+    <meta name="description" content="Browse our collection of premium high-speed website templates. Business, E-commerce, Portfolio, Landing Page & Restaurant templates with instant download.">
+    <meta name="keywords" content="premium templates, website templates, high speed templates, responsive templates">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Premium Website Templates - Calius Digital">
+    <meta property="og:description" content="Browse our collection of premium high-speed website templates.">
+    <meta property="og:image" content="https://calius.digital/assets/images/og-image.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://calius.digital/templates">
+    
+    <style>
+        .templates-header {
+            padding-top: calc(var(--header-height) + var(--spacing-2xl));
+            padding-bottom: var(--spacing-2xl);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .filters-section {
+            background-color: white;
+            padding: var(--spacing-lg) 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: var(--header-height);
+            z-index: 100;
+        }
+        
+        .filters-container {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+        }
+        
+        .filter-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            background-color: white;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: 0.875rem;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .template-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+        }
+        
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .template-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background-color: var(--bg-secondary);
+        }
+        
+        .template-content {
+            padding: var(--spacing-lg);
+        }
+        
+        .template-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .template-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+        
+        .template-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: var(--spacing-md);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .template-meta {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .template-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .template-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .template-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .template-price-old {
+            font-size: 1rem;
+            color: var(--text-light);
+            text-decoration: line-through;
+            margin-left: 0.5rem;
+        }
+        
+        .template-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .badge {
+            position: absolute;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-featured {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .badge-bestseller {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .badge-new {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: var(--spacing-3xl);
+            color: var(--text-secondary);
+        }
+        
+        .loading-spinner {
+            text-align: center;
+            padding: var(--spacing-3xl);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Header / Navigation -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="/" class="logo">
+                <span>Calius Digital</span>
+            </a>
+            
+            <nav class="nav">
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link" data-i18n="nav.home">Home</a></li>
+                    <li><a href="/templates.html" class="nav-link active" data-i18n="nav.templates">Templates</a></li>
+                    <li><a href="/blog.html" class="nav-link" data-i18n="nav.blog">Blog</a></li>
+                    <li><a href="/about.html" class="nav-link" data-i18n="nav.about">About</a></li>
+                    <li><a href="/contact.html" class="nav-link" data-i18n="nav.contact">Contact</a></li>
+                </ul>
+                
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="id">ID</button>
+                </div>
+                
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Templates Header -->
+    <section class="templates-header">
+        <div class="container">
+            <h1 data-i18n="templates.title">Premium Website Templates</h1>
+            <p data-i18n="templates.subtitle">Choose from our collection of high-performance templates</p>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters-section">
+        <div class="container">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label style="font-weight: 600; margin-right: 0.5rem;">Category:</label>
+                    <button class="filter-btn active" data-filter="all" data-i18n="templates.filter.all">All</button>
+                    <button class="filter-btn" data-filter="business" data-i18n="category.business">Business</button>
+                    <button class="filter-btn" data-filter="ecommerce" data-i18n="category.ecommerce">E-commerce</button>
+                    <button class="filter-btn" data-filter="portfolio" data-i18n="category.portfolio">Portfolio</button>
+                    <button class="filter-btn" data-filter="landing-page" data-i18n="category.landing-page">Landing Page</button>
+                    <button class="filter-btn" data-filter="restaurant" data-i18n="category.restaurant">Restaurant</button>
+                </div>
+                
+                <div class="filter-group" style="margin-left: auto;">
+                    <label style="font-weight: 600; margin-right: 0.5rem;">Sort:</label>
+                    <select id="sort-select" class="form-select" style="padding: 0.5rem; border-radius: 0.5rem;">
+                        <option value="popular" data-i18n="templates.sort.popular">Most Popular</option>
+                        <option value="price-low" data-i18n="templates.sort.price-low">Price: Low to High</option>
+                        <option value="price-high" data-i18n="templates.sort.price-high">Price: High to Low</option>
+                        <option value="newest" data-i18n="templates.sort.newest">Newest First</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Templates Grid -->
+    <section class="section">
+        <div class="container">
+            <div id="templates-grid" class="grid grid-3">
+                <div class="loading-spinner">
+                    <div class="loading" style="width: 40px; height: 40px; border-width: 4px;"></div>
+                    <p style="margin-top: 1rem;">Loading templates...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-i18n="footer.about">About Calius Digital</h3>
+                    <p data-i18n="footer.about-text">
+                        Premium high-speed website templates for global market.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="footer.quick-links">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/" data-i18n="nav.home">Home</a></li>
+                        <li><a href="/templates.html" data-i18n="nav.templates">Templates</a></li>
+                        <li><a href="/blog.html" data-i18n="nav.blog">Blog</a></li>
+                        <li><a href="/about.html" data-i18n="nav.about">About</a></li>
+                        <li><a href="/contact.html" data-i18n="nav.contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="footer.support">Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" data-i18n="footer.faq">FAQ</a></li>
+                        <li><a href="#" data-i18n="footer.documentation">Documentation</a></li>
+                        <li><a href="#" data-i18n="footer.terms">Terms of Service</a></li>
+                        <li><a href="#" data-i18n="footer.privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="footer.newsletter">Newsletter</h3>
+                    <p data-i18n="footer.newsletter-text">Subscribe to get updates</p>
+                    <form id="newsletter-form" style="margin-top: 1rem;">
+                        <input type="email" class="form-input" placeholder="Your email" required>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;" data-i18n="footer.subscribe">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p data-i18n="footer.copyright">© 2024 Calius Digital. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/assets/js/language.js"></script>
+    <script src="/assets/js/lazy-load.js"></script>
+    <script src="/assets/js/main.js"></script>
+    
+    <script>
+        let allTemplates = [];
+        let currentFilter = 'all';
+        let currentSort = 'popular';
+        
+        // Load templates
+        async function loadTemplates() {
+            try {
+                const response = await fetch('/data/templates.json');
+                const data = await response.json();
+                allTemplates = data.templates;
+                displayTemplates();
+            } catch (error) {
+                console.error('Error loading templates:', error);
+                document.getElementById('templates-grid').innerHTML = `
+                    <div class="no-results">
+                        <p>Failed to load templates. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Display templates
+        function displayTemplates() {
+            let templates = [...allTemplates];
+            
+            // Filter
+            if (currentFilter !== 'all') {
+                templates = templates.filter(t => t.category === currentFilter);
+            }
+            
+            // Sort
+            switch(currentSort) {
+                case 'price-low':
+                    templates.sort((a, b) => (a.salePrice || a.price) - (b.salePrice || b.price));
+                    break;
+                case 'price-high':
+                    templates.sort((a, b) => (b.salePrice || b.price) - (a.salePrice || a.price));
+                    break;
+                case 'newest':
+                    templates.sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
+                    break;
+                default: // popular
+                    templates.sort((a, b) => b.downloads - a.downloads);
+            }
+            
+            const grid = document.getElementById('templates-grid');
+            const lang = window.LanguageManager.getLanguage();
+            
+            if (templates.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results">
+                        <p>No templates found in this category.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = templates.map(template => `
+                <div class="template-card">
+                    <div style="position: relative;">
+                        <img src="${template.previewImage}" alt="${template.name[lang]}" class="template-image" loading="lazy">
+                        ${template.featured ? '<span class="badge badge-featured">Featured</span>' : ''}
+                        ${template.bestseller ? '<span class="badge badge-bestseller">Bestseller</span>' : ''}
+                        ${template.new ? '<span class="badge badge-new">New</span>' : ''}
+                    </div>
+                    <div class="template-content">
+                        <span class="template-category">${template.category}</span>
+                        <h3 class="template-title">${template.name[lang]}</h3>
+                        <p class="template-description">${template.description[lang]}</p>
+                        
+                        <div class="template-meta">
+                            <span class="template-meta-item">📄 ${template.pages} pages</span>
+                            <span class="template-meta-item">⭐ ${template.rating.toFixed(1)}</span>
+                            <span class="template-meta-item">⬇️ ${template.downloads}</span>
+                        </div>
+                        
+                        <div class="template-footer">
+                            <div>
+                                <span class="template-price">$${template.salePrice || template.price}</span>
+                                ${template.salePrice ? `<span class="template-price-old">$${template.price}</span>` : ''}
+                            </div>
+                            <div class="template-actions">
+                                <a href="${template.demoUrl}" target="_blank" class="btn btn-secondary btn-sm">Demo</a>
+                                <button class="btn btn-primary btn-sm add-to-cart" data-template-id="${template.id}">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Add event listeners to cart buttons
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const templateId = this.dataset.templateId;
+                    if (window.CaliusDigital) {
+                        window.CaliusDigital.addToCart(templateId);
+                    }
+                });
+            });
+        }
+        
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                displayTemplates();
+            });
+        });
+        
+        // Sort select
+        document.getElementById('sort-select').addEventListener('change', function() {
+            currentSort = this.value;
+            displayTemplates();
+        });
+        
+        // Check URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryParam = urlParams.get('category');
+        if (categoryParam) {
+            currentFilter = categoryParam;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === categoryParam);
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadTemplates);
+    </script>
+    
+</body>
+</html>

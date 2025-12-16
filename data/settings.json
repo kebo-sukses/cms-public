@@ -1,0 +1,131 @@
+{
+  "site": {
+    "name": "Calius Digital",
+    "tagline": {
+      "en": "Premium High-Speed Website Templates",
+      "id": "Template Website Premium Berkecepatan Tinggi"
+    },
+    "description": {
+      "en": "Discover premium website templates with lightning-fast loading speeds. Perfect for businesses, e-commerce, portfolios, landing pages, and restaurants. Global delivery with instant download.",
+      "id": "Temukan template website premium dengan kecepatan loading super cepat. Sempurna untuk bisnis, e-commerce, portfolio, landing page, dan restoran. Pengiriman global dengan download instan."
+    },
+    "url": "https://calius.digital",
+    "email": "support@calius.digital",
+    "phone": "+62-xxx-xxxx-xxxx",
+    "logo": "/assets/images/logo.svg",
+    "favicon": "/assets/images/favicon.ico",
+    "defaultLanguage": "en",
+    "supportedLanguages": ["en", "id"],
+    "currency": "USD",
+    "timezone": "UTC"
+  },
+  "seo": {
+    "metaTitle": {
+      "en": "Calius Digital - Premium High-Speed Website Templates",
+      "id": "Calius Digital - Template Website Premium Berkecepatan Tinggi"
+    },
+    "metaDescription": {
+      "en": "Buy premium website templates with guaranteed high-speed performance. Business, E-commerce, Portfolio, Landing Page & Restaurant templates. Instant download, lifetime updates.",
+      "id": "Beli template website premium dengan performa kecepatan tinggi terjamin. Template Business, E-commerce, Portfolio, Landing Page & Restaurant. Download instan, update selamanya."
+    },
+    "keywords": {
+      "en": "premium templates, website templates, high speed templates, responsive templates, business templates, ecommerce templates, portfolio templates, landing page templates, restaurant templates",
+      "id": "template premium, template website, template kecepatan tinggi, template responsif, template bisnis, template ecommerce, template portfolio, template landing page, template restoran"
+    },
+    "ogImage": "/assets/images/og-image.jpg",
+    "twitterCard": "summary_large_image",
+    "googleAnalytics": "",
+    "googleTagManager": "",
+    "facebookPixel": ""
+  },
+  "payment": {
+    "stripe": {
+      "enabled": true,
+      "publicKey": "pk_test_YOUR_STRIPE_PUBLIC_KEY",
+      "currency": "USD",
+      "description": "Calius Digital Template Purchase"
+    },
+    "paypal": {
+      "enabled": true,
+      "clientId": "YOUR_PAYPAL_CLIENT_ID",
+      "currency": "USD",
+      "environment": "sandbox"
+    },
+    "midtrans": {
+      "enabled": true,
+      "clientKey": "YOUR_MIDTRANS_CLIENT_KEY",
+      "serverKey": "YOUR_MIDTRANS_SERVER_KEY",
+      "environment": "sandbox",
+      "currency": "IDR"
+    }
+  },
+  "email": {
+    "smtp": {
+      "host": "smtp.gmail.com",
+      "port": 587,
+      "secure": false,
+      "user": "your-email@gmail.com",
+      "password": "your-app-password"
+    },
+    "templates": {
+      "orderConfirmation": {
+        "subject": {
+          "en": "Order Confirmation - Calius Digital",
+          "id": "Konfirmasi Pesanan - Calius Digital"
+        }
+      },
+      "downloadLink": {
+        "subject": {
+          "en": "Your Template Download Link - Calius Digital",
+          "id": "Link Download Template Anda - Calius Digital"
+        }
+      }
+    }
+  },
+  "social": {
+    "facebook": "https://facebook.com/caliusdigital",
+    "twitter": "https://twitter.com/caliusdigital",
+    "instagram": "https://instagram.com/caliusdigital",
+    "linkedin": "https://linkedin.com/company/caliusdigital",
+    "youtube": "https://youtube.com/@caliusdigital"
+  },
+  "features": {
+    "blog": true,
+    "newsletter": true,
+    "reviews": true,
+    "wishlist": true,
+    "compareTemplates": true,
+    "livePreview": true,
+    "instantDownload": true,
+    "lifetimeUpdates": true,
+    "support": true
+  },
+  "performance": {
+    "lazyLoadImages": true,
+    "minifyAssets": true,
+    "enableCaching": true,
+    "enableCompression": true,
+    "cdnEnabled": false,
+    "cdnUrl": ""
+  },
+  "security": {
+    "twoFactorAuth": true,
+    "sessionTimeout": 3600,
+    "maxLoginAttempts": 5,
+    "lockoutDuration": 900,
+    "passwordMinLength": 8,
+    "requireStrongPassword": true,
+    "uploadKey": "CHANGE_ME_UPLOAD_KEY",
+    "uploadQuotaPerDay": 100,
+    "virusScannerCmd": ""  
+  },
+  "maintenance": {
+    "enabled": false,
+    "message": {
+      "en": "We're currently performing scheduled maintenance. We'll be back soon!",
+      "id": "Kami sedang melakukan maintenance terjadwal. Kami akan kembali segera!"
+    }
+  },
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-01T00:00:00Z"
+}

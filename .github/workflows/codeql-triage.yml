@@ -1,0 +1,34 @@
+name: CodeQL Alert Triage
+
+on:
+  code_scanning_alert:
+    types: [ 'created', 'reopened', 'retriaged' ]
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Triage CodeQL Alert
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const alert = context.payload.alert || context.payload;
+            const severity = (alert.rule && alert.rule.severity) || alert.alert && alert.alert.rule && alert.alert.rule.severity;
+            const repo = context.repo.repo;
+            const owner = context.repo.owner;
+            const issueTitle = `CodeQL alert: ${alert.rule && alert.rule.id ? alert.rule.id : alert.rule ? alert.rule : 'unknown'}`;
+            const labels = [];
+            if (severity === 'error' || severity === 'high') {
+              labels.push('security/high');
+            } else if (severity === 'warning' || severity === 'medium') {
+              labels.push('security/medium');
+            } else {
+              labels.push('security/low');
+            }
+            // Create an issue to track the high/medium findings
+            if (labels.includes('security/high') || labels.includes('security/medium')) {
+              await github.issues.create({ owner, repo, title: issueTitle, body: `A CodeQL alert was raised:\n\n${JSON.stringify(alert, null, 2)}`, labels });
+            } else {
+              // Add labels to the alert as a note (alerts don't support labels directly)
+              core.info(`Low severity CodeQL alert detected: ${JSON.stringify(alert.rule || alert, null, 2)}`);
+            }

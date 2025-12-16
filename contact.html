@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO Meta Tags -->
+    <title>Contact Us - Calius Digital</title>
+    <meta name="description" content="Get in touch with Calius Digital. We're here to help with any questions about our premium website templates.">
+    <meta name="keywords" content="contact calius digital, support, help, customer service">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+    
+    <style>
+        .contact-hero {
+            padding-top: calc(var(--header-height) + var(--spacing-2xl));
+            padding-bottom: var(--spacing-2xl);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .contact-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-md);
+            color: white;
+        }
+        
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--spacing-2xl);
+            margin-top: var(--spacing-2xl);
+        }
+        
+        .contact-form-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-2xl);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .contact-info-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+        
+        .contact-info-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .contact-info-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .contact-info-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+        
+        .contact-info-text {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .contact-info-text a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .contact-info-text a:hover {
+            text-decoration: underline;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+        
+        .social-link:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .form-success {
+            display: none;
+            padding: var(--spacing-lg);
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success-color);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+            color: var(--success-color);
+        }
+        
+        .form-success.show {
+            display: block;
+        }
+        
+        .faq-section {
+            margin-top: var(--spacing-3xl);
+        }
+        
+        .faq-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .faq-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .faq-icon {
+            font-size: 1.5rem;
+            transition: transform var(--transition-fast);
+        }
+        
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition-base);
+            color: var(--text-secondary);
+            padding-top: 0;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding-top: var(--spacing-md);
+        }
+        
+        @media (max-width: 1024px) {
+            .contact-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Header / Navigation -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="/" class="logo">
+                <span>Calius Digital</span>
+            </a>
+            
+            <nav class="nav">
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link" data-i18n="nav.home">Home</a></li>
+                    <li><a href="/templates.html" class="nav-link" data-i18n="nav.templates">Templates</a></li>
+                    <li><a href="/blog.html" class="nav-link" data-i18n="nav.blog">Blog</a></li>
+                    <li><a href="/about.html" class="nav-link" data-i18n="nav.about">About</a></li>
+                    <li><a href="/contact.html" class="nav-link active" data-i18n="nav.contact">Contact</a></li>
+                </ul>
+                
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="id">ID</button>
+                </div>
+                
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="contact-hero">
+        <div class="container">
+            <h1 data-i18n="contact.title">Contact Us</h1>
+            <p data-i18n="contact.subtitle">Get in touch with our team. We're here to help!</p>
+        </div>
+    </section>
+
+    <!-- Contact Content -->
+    <section class="section">
+        <div class="container">
+            <div class="contact-layout">
+                <!-- Contact Form -->
+                <div class="contact-form-section">
+                    <h2 style="margin-bottom: var(--spacing-lg);">Send us a Message</h2>
+                    
+                    <div id="form-success" class="form-success">
+                        <strong>✓ Message Sent Successfully!</strong><br>
+                        Thank you for contacting us. We'll get back to you within 24 hours.
+                    </div>
+                    
+                    <form id="contact-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="form.first-name">First Name</label>
+                                <input type="text" name="firstName" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="form.last-name">Last Name</label>
+                                <input type="text" name="lastName" class="form-input" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="form.email">Email Address</label>
+                            <input type="email" name="email" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Subject</label>
+                            <select name="subject" class="form-select" required>
+                                <option value="">Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="support">Technical Support</option>
+                                <option value="sales">Sales Question</option>
+                                <option value="partnership">Partnership Opportunity</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="form.message">Message</label>
+                            <textarea name="message" class="form-textarea" rows="6" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" data-i18n="contact.send-message">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Contact Info -->
+                <div class="contact-info-section">
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon">📧</div>
+                        <h3 class="contact-info-title">Email Us</h3>
+                        <div class="contact-info-text">
+                            <p>For general inquiries:</p>
+                            <a href="mailto:support@calius.digital">support@calius.digital</a>
+                            <p style="margin-top: var(--spacing-sm);">For sales:</p>
+                            <a href="mailto:sales@calius.digital">sales@calius.digital</a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon">💬</div>
+                        <h3 class="contact-info-title">Live Chat</h3>
+                        <div class="contact-info-text">
+                            <p>Available Monday - Friday</p>
+                            <p>9:00 AM - 6:00 PM (GMT+7)</p>
+                            <button class="btn btn-primary btn-sm" style="margin-top: var(--spacing-sm);">
+                                Start Chat
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon">⏰</div>
+                        <h3 class="contact-info-title">Response Time</h3>
+                        <div class="contact-info-text">
+                            <p>We typically respond within:</p>
+                            <p><strong>24 hours</strong> for email inquiries</p>
+                            <p><strong>2 hours</strong> for live chat</p>
+                            <p><strong>Instant</strong> for urgent issues</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon">🌐</div>
+                        <h3 class="contact-info-title">Follow Us</h3>
+                        <div class="contact-info-text">
+                            <p>Stay connected on social media</p>
+                            <div class="social-links">
+                                <a href="#" class="social-link" title="Facebook">📘</a>
+                                <a href="#" class="social-link" title="Twitter">🐦</a>
+                                <a href="#" class="social-link" title="Instagram">📷</a>
+                                <a href="#" class="social-link" title="LinkedIn">💼</a>
+                                <a href="#" class="social-link" title="YouTube">📺</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section faq-section" style="background-color: var(--bg-secondary);">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Quick answers to common questions</p>
+            
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I download my purchased template?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>After completing your purchase, you'll receive an email with a download link. You can also access your downloads from your account dashboard. The download link is valid for 1 year and allows up to 5 downloads.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I get a refund if I'm not satisfied?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! We offer a 30-day money-back guarantee. If you're not satisfied with your purchase for any reason, contact us within 30 days for a full refund. No questions asked.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Do I get lifetime updates?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! All our templates come with lifetime updates at no additional cost. Whenever we release new features, improvements, or security patches, you'll get them for free.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I use the template for multiple websites?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Each license allows you to use the template on one website. If you need to use it on multiple sites, you'll need to purchase additional licenses. We offer volume discounts for multiple purchases.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What kind of support do you provide?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We provide comprehensive support including email support, live chat, detailed documentation, and video tutorials. Our support team is available Monday-Friday, 9 AM - 6 PM GMT+7.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Are the templates mobile-friendly?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! All our templates are built with a mobile-first approach and are fully responsive. They look perfect on all devices including smartphones, tablets, and desktops.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section">
+        <div class="container text-center">
+            <h2 class="section-title">Still Have Questions?</h2>
+            <p class="section-subtitle">Don't hesitate to reach out. We're here to help!</p>
+            <a href="mailto:support@calius.digital" class="btn btn-primary btn-lg">Email Us</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-i18n="footer.about">About Calius Digital</h3>
+                    <p data-i18n="footer.about-text">Premium high-speed website templates for global market.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="footer.quick-links">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/" data-i18n="nav.home">Home</a></li>
+                        <li><a href="/templates.html" data-i18n="nav.templates">Templates</a></li>
+                        <li><a href="/blog.html" data-i18n="nav.blog">Blog</a></li>
+                        <li><a href="/about.html" data-i18n="nav.about">About</a></li>
+                        <li><a href="/contact.html" data-i18n="nav.contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="footer.support">Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" data-i18n="footer.faq">FAQ</a></li>
+                        <li><a href="#" data-i18n="footer.documentation">Documentation</a></li>
+                        <li><a href="#" data-i18n="footer.terms">Terms of Service</a></li>
+                        <li><a href="#" data-i18n="footer.privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="footer.newsletter">Newsletter</h3>
+                    <p data-i18n="footer.newsletter-text">Subscribe to get updates</p>
+                    <form id="newsletter-form" style="margin-top: 1rem;">
+                        <input type="email" class="form-input" placeholder="Your email" required>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;" data-i18n="footer.subscribe">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p data-i18n="footer.copyright">© 2024 Calius Digital. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/assets/js/language.js"></script>
+    <script src="/assets/js/main.js"></script>
+    
+    <script>
+        // Contact form submission
+        document.getElementById('contact-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            try {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="loading"></span> Sending...';
+                
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Show success message
+                document.getElementById('form-success').classList.add('show');
+                this.reset();
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    document.getElementById('form-success').classList.remove('show');
+                }, 5000);
+                
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+                
+            } catch (error) {
+                console.error('Form submission error:', error);
+                alert('Failed to send message. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+        
+        // FAQ accordion
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const isActive = this.classList.contains('active');
+                
+                // Close all items
+                document.querySelectorAll('.faq-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                
+                // Open clicked item if it wasn't active
+                if (!isActive) {
+                    this.classList.add('active');
+                }
+            });
+        });
+    </script>
+    
+</body>
+</html>

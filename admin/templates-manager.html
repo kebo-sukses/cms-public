@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Templates Manager - Calius Digital Admin</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+    
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-logo">Calius Admin</div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+            </div>
+            
+            <nav class="admin-nav">
+                <div class="admin-nav-section">
+                    <div class="admin-nav-title">Main</div>
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="/admin/index.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">📊</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/templates-manager.html" class="admin-nav-link active">
+                                <span class="admin-nav-icon">🎨</span>
+                                <span>Templates</span>
+                                <span class="admin-nav-badge" id="templates-count">0</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/blog-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">📝</span>
+                                <span>Blog Posts</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/orders-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">🛒</span>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="admin-nav-section">
+                    <div class="admin-nav-title">Settings</div>
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="/admin/settings.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">⚙️</span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link" onclick="CaliusAuth.logout(); return false;">
+                                <span class="admin-nav-icon">🚪</span>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="admin-header-left">
+                    <h1 class="admin-header-title">Templates Manager</h1>
+                </div>
+                
+                <div class="admin-header-right">
+                    <button class="btn btn-primary" id="add-template-btn" onclick="showAddTemplateModal()">
+                        ➕ Add New Template
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="admin-content">
+                <!-- Filters -->
+                <div class="admin-card" style="margin-bottom: var(--spacing-lg);">
+                    <div class="admin-card-body">
+                        <div style="display: flex; gap: var(--spacing-md); align-items: center; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 250px;">
+                                <input type="text" id="search-templates" class="form-input" placeholder="Search templates...">
+                            </div>
+                            <select id="filter-category" class="form-select" style="min-width: 150px;">
+                                <option value="">All Categories</option>
+                                <option value="business">Business</option>
+                                <option value="ecommerce">E-commerce</option>
+                                <option value="portfolio">Portfolio</option>
+                                <option value="landing-page">Landing Page</option>
+                                <option value="restaurant">Restaurant</option>
+                            </select>
+                            <select id="filter-status" class="form-select" style="min-width: 150px;">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Templates Table -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">All Templates</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="templates-table">
+                                <thead>
+                                    <tr>
+                                        <th>Preview</th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Price</th>
+                                        <th>Downloads</th>
+                                        <th>Rating</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="8" style="text-align: center; padding: 2rem;">
+                                            <div class="loading"></div>
+                                            <p style="margin-top: 1rem;">Loading templates...</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Template Modal -->
+    <div class="admin-modal-overlay" id="template-modal">
+        <div class="admin-modal" style="max-width: 800px;">
+            <div class="admin-modal-header">
+                <h3 class="admin-modal-title" id="modal-title">Add New Template</h3>
+                <button class="admin-modal-close" onclick="closeTemplateModal()">×</button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="template-form">
+                    <input type="hidden" id="template-id" name="id">
+                    
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label required">Name (English)</label>
+                            <input type="text" name="name_en" class="admin-form-input" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label required">Name (Indonesian)</label>
+                            <input type="text" name="name_id" class="admin-form-input" required>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label required">Category</label>
+                            <select name="category" class="admin-form-select" required>
+                                <option value="">Select Category</option>
+                                <option value="business">Business</option>
+                                <option value="ecommerce">E-commerce</option>
+                                <option value="portfolio">Portfolio</option>
+                                <option value="landing-page">Landing Page</option>
+                                <option value="restaurant">Restaurant</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label required">Price (USD)</label>
+                            <input type="number" name="price" class="admin-form-input" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-form-group">
+                        <label class="admin-form-label">Sale Price (USD)</label>
+                        <input type="number" name="salePrice" class="admin-form-input" min="0" step="0.01">
+                        <div class="admin-form-help">Leave empty if no sale</div>
+                    </div>
+                    
+                    <div class="admin-form-group">
+                        <label class="admin-form-label required">Description (English)</label>
+                        <textarea name="description_en" class="admin-form-textarea" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="admin-form-group">
+                        <label class="admin-form-label required">Description (Indonesian)</label>
+                        <textarea name="description_id" class="admin-form-textarea" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Demo URL</label>
+                            <input type="url" name="demoUrl" class="admin-form-input">
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Number of Pages</label>
+                            <input type="number" name="pages" class="admin-form-input" min="1" value="1">
+                        </div>
+                    </div>
+                    
+                    <div class="admin-form-group">
+                        <label class="admin-form-label">Preview Image URL</label>
+                        <input type="text" name="previewImage" class="admin-form-input" placeholder="/assets/images/templates/preview.jpg">
+                        <div class="admin-form-help">Upload image via cPanel File Manager first</div>
+                    </div>
+                    
+                    <div class="admin-form-group">
+                        <label class="admin-form-label">Tags (comma separated)</label>
+                        <input type="text" name="tags" class="admin-form-input" placeholder="business, corporate, professional">
+                    </div>
+                    
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">
+                                <input type="checkbox" name="featured"> Featured
+                            </label>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">
+                                <input type="checkbox" name="bestseller"> Bestseller
+                            </label>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">
+                                <input type="checkbox" name="new" checked> New
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-alert info">
+                        <div class="admin-alert-icon">ℹ️</div>
+                        <div class="admin-alert-content">
+                            <strong>Important:</strong> After saving, you'll need to manually update the JSON file via cPanel File Manager.
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-secondary" onclick="closeTemplateModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveTemplate()">Save Template</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/cms.js"></script>
+    
+    <script>
+        let allTemplates = [];
+        let editingTemplateId = null;
+        
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('admin-sidebar').classList.toggle('collapsed');
+        }
+        
+        // Load templates
+        async function loadTemplates() {
+            try {
+                allTemplates = await CaliusCMS.TemplateManager.loadAll();
+                document.getElementById('templates-count').textContent = allTemplates.length;
+                displayTemplates(allTemplates);
+            } catch (error) {
+                console.error('Error loading templates:', error);
+                CaliusCMS.showNotification('Error loading templates', 'error');
+            }
+        }
+        
+        // Display templates
+        function displayTemplates(templates) {
+            const tbody = document.querySelector('#templates-table tbody');
+            
+            if (templates.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            No templates found
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            function renderActions(template) {
+                const canManage = CaliusAuth.hasPermission('manage_templates');
+                const editClass = 'admin-table-btn edit' + (!canManage ? ' btn-disabled' : '');
+                const delClass = 'admin-table-btn delete' + (!canManage ? ' btn-disabled' : '');
+                const editBtn = `<button class="${editClass}" ${!canManage ? 'disabled title="Permission required: manage_templates"' : `onclick="editTemplate('${template.id}')"`}>Edit</button>`;
+                const delBtn = `<button class="${delClass}" ${!canManage ? 'disabled title="Permission required: manage_templates"' : `onclick="deleteTemplate('${template.id}')"`}>Delete</button>`;
+                return editBtn + delBtn;
+            }
+
+            tbody.innerHTML = templates.map(template => `
+                <tr>
+                    <td>
+                        <img src="${template.previewImage}" alt="${template.name.en}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;">
+                    </td>
+                    <td>
+                        <strong>${template.name.en}</strong><br>
+                        <small style="color: var(--text-secondary);">${template.slug}</small>
+                    </td>
+                    <td>
+                        <span class="admin-badge secondary">${template.category}</span>
+                    </td>
+                    <td>
+                        <strong>$${template.salePrice || template.price}</strong>
+                        ${template.salePrice ? `<br><small style="text-decoration: line-through; color: var(--text-light);">$${template.price}</small>` : ''}
+                    </td>
+                    <td>${template.downloads}</td>
+                    <td>⭐ ${template.rating.toFixed(1)}</td>
+                    <td>
+                        <span class="admin-badge ${template.status === 'active' ? 'success' : 'secondary'}">
+                            ${template.status}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="admin-table-actions">
+                            ${renderActions(template)}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Show add template modal
+        function showAddTemplateModal() {
+            editingTemplateId = null;
+            document.getElementById('modal-title').textContent = 'Add New Template';
+            document.getElementById('template-form').reset();
+            document.getElementById('template-id').value = '';
+            document.getElementById('template-modal').classList.add('active');
+        }
+        
+        // Edit template
+        function editTemplate(templateId) {
+            const template = allTemplates.find(t => t.id === templateId);
+            if (!template) return;
+            
+            editingTemplateId = templateId;
+            document.getElementById('modal-title').textContent = 'Edit Template';
+            
+            // Fill form
+            const form = document.getElementById('template-form');
+            form.querySelector('[name="id"]').value = template.id;
+            form.querySelector('[name="name_en"]').value = template.name.en;
+            form.querySelector('[name="name_id"]').value = template.name.id;
+            form.querySelector('[name="category"]').value = template.category;
+            form.querySelector('[name="price"]').value = template.price;
+            form.querySelector('[name="salePrice"]').value = template.salePrice || '';
+            form.querySelector('[name="description_en"]').value = template.description.en;
+            form.querySelector('[name="description_id"]').value = template.description.id;
+            form.querySelector('[name="demoUrl"]').value = template.demoUrl;
+            form.querySelector('[name="pages"]').value = template.pages;
+            form.querySelector('[name="previewImage"]').value = template.previewImage;
+            form.querySelector('[name="tags"]').value = template.tags.join(', ');
+            form.querySelector('[name="featured"]').checked = template.featured;
+            form.querySelector('[name="bestseller"]').checked = template.bestseller;
+            form.querySelector('[name="new"]').checked = template.new;
+            
+            document.getElementById('template-modal').classList.add('active');
+        }
+        
+        // Save template
+        async function saveTemplate() {
+            const form = document.getElementById('template-form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const formData = new FormData(form);
+            const templateData = {
+                name: {
+                    en: formData.get('name_en'),
+                    id: formData.get('name_id')
+                },
+                slug: formData.get('name_en').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                category: formData.get('category'),
+                price: parseFloat(formData.get('price')),
+                salePrice: formData.get('salePrice') ? parseFloat(formData.get('salePrice')) : null,
+                description: {
+                    en: formData.get('description_en'),
+                    id: formData.get('description_id')
+                },
+                demoUrl: formData.get('demoUrl'),
+                pages: parseInt(formData.get('pages')),
+                previewImage: formData.get('previewImage'),
+                tags: formData.get('tags').split(',').map(t => t.trim()).filter(t => t),
+                featured: formData.get('featured') === 'on',
+                bestseller: formData.get('bestseller') === 'on',
+                new: formData.get('new') === 'on',
+                features: { en: [], id: [] },
+                technologies: [],
+                images: []
+            };
+            
+            const saveBtn = document.querySelector('#template-modal .btn.btn-primary');
+            try {
+                if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving...'; }
+
+                if (editingTemplateId) {
+                    await CaliusCMS.TemplateManager.update(editingTemplateId, templateData);
+                    CaliusCMS.showNotification('Template updated successfully', 'success');
+                } else {
+                    await CaliusCMS.TemplateManager.create(templateData);
+                    CaliusCMS.showNotification('Template created successfully', 'success');
+                }
+
+                closeTemplateModal();
+                loadTemplates();
+            } catch (error) {
+                console.error('Error saving template:', error);
+                CaliusCMS.showNotification('Error saving template', 'error');
+            } finally {
+                if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Template'; }
+            }
+        }
+        
+        // Delete template
+        async function deleteTemplate(templateId) {
+            showConfirmModal('Are you sure you want to delete this template?', async () => {
+                try {
+                    await CaliusCMS.TemplateManager.delete(templateId);
+                    CaliusCMS.showNotification('Template deleted successfully', 'success');
+                    loadTemplates();
+                } catch (error) {
+                    console.error('Error deleting template:', error);
+                    CaliusCMS.showNotification('Error deleting template', 'error');
+                }
+            });
+        }
+
+        // Generic confirm modal helper
+        function showConfirmModal(message, onConfirm) {
+            const modal = document.createElement('div');
+            modal.className = 'admin-modal-overlay active';
+            modal.innerHTML = `
+                <div class="admin-modal">
+                    <div class="admin-modal-header">
+                        <h3 class="admin-modal-title">Confirm</h3>
+                    </div>
+                    <div class="admin-modal-body">
+                        <p>${message}</p>
+                    </div>
+                    <div class="admin-modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.admin-modal-overlay').remove()">Cancel</button>
+                        <button class="btn btn-danger" id="confirm-yes">Yes, Delete</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.querySelector('#confirm-yes').addEventListener('click', function() {
+                try { onConfirm(); } catch (e) { console.error(e); }
+                modal.remove();
+            });
+        }
+        
+        // Close modal
+        function closeTemplateModal() {
+            document.getElementById('template-modal').classList.remove('active');
+        }
+        
+        // Search and filter
+        document.getElementById('search-templates').addEventListener('input', filterTemplates);
+        document.getElementById('filter-category').addEventListener('change', filterTemplates);
+        document.getElementById('filter-status').addEventListener('change', filterTemplates);
+        
+        function filterTemplates() {
+            const search = document.getElementById('search-templates').value.toLowerCase();
+            const category = document.getElementById('filter-category').value;
+            const status = document.getElementById('filter-status').value;
+            
+            let filtered = allTemplates;
+            
+            if (search) {
+                filtered = filtered.filter(t => 
+                    t.name.en.toLowerCase().includes(search) ||
+                    t.name.id.toLowerCase().includes(search) ||
+                    t.slug.toLowerCase().includes(search)
+                );
+            }
+            
+            if (category) {
+                filtered = filtered.filter(t => t.category === category);
+            }
+            
+            if (status) {
+                filtered = filtered.filter(t => t.status === status);
+            }
+            
+            displayTemplates(filtered);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!CaliusAuth.requireAuth()) return;
+            // Disable add button if no permission (instead of hiding)
+            const addBtn = document.getElementById('add-template-btn');
+            if (addBtn && !CaliusAuth.hasPermission('manage_templates')) {
+                addBtn.disabled = true;
+                addBtn.title = 'Permission required: manage_templates';
+                addBtn.classList.add('btn-disabled');
+            }
+            loadTemplates();
+        });
+    </script>
+    
+</body>
+</html>

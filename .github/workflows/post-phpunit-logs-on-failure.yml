@@ -1,0 +1,103 @@
+name: Post PHPUnit logs on failure
+
+on:
+  workflow_run:
+    workflows: ["PHP Tests"]
+    types: [completed]
+
+jobs:
+  post-logs:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: write
+      actions: read
+    steps:
+      - name: Find or create issue
+        id: find_issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const branch = run.head_branch || run.head_sha;
+            const title = `CI: PHP Tests failed on ${branch}`;
+
+            // Check for existing open issue with same title
+            const existing = await github.issues.listForRepo({ owner, repo, state: 'open', labels: 'ci-failure' });
+            let issue = existing.data.find(i => i.title === title);
+            if (!issue) {
+              issue = (await github.issues.create({ owner, repo, title, body: `The **PHP Tests** workflow failed: ${run.html_url}`, labels: ['ci-failure'] })).data;
+            }
+            core.setOutput('issue-number', issue.number);
+
+      - name: Download workflow run logs
+        env:
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          echo "Downloading logs for run $RUN_ID"
+          curl -sL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/$RUN_ID/logs" -o logs.zip
+          unzip -q logs.zip -d logs || true
+
+      - name: Extract phpunit output
+        id: extract
+        run: |
+          set -e
+          FILE=$(find logs -type f -iname "phpunit-output.txt" | head -n 1 || true)
+          if [ -z "$FILE" ]; then
+            # Some runs include job logs under 'logs' with job folders; search content
+            FILE=$(grep -R --line-number --files-with-matches "phpunit-output" logs || true)
+          fi
+          if [ -z "$FILE" ]; then
+            echo "phpunit-output.txt not found in logs"
+            echo "No phpunit output found" > phpunit-snippet.txt
+            echo "found=false" >> $GITHUB_OUTPUT
+          else
+            # Take last 2000 lines to keep comment size reasonable
+            tail -n 2000 "$FILE" > phpunit-snippet.txt || true
+            # Copy full output for uploading
+            cp "$FILE" phpunit-full.txt || true
+            echo "found=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload full phpunit output to repo (ci-logs)
+        id: upload_full
+        if: ${{ steps.extract.outputs.found == 'true' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const run = context.payload.workflow_run;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const path = `ci-logs/phpunit-output-${run.id}.txt`;
+            const content = fs.readFileSync('phpunit-full.txt', 'utf8');
+            let sha = undefined;
+            try {
+              const existing = await github.repos.getContent({ owner, repo, path });
+              sha = existing.data.sha;
+            } catch (e) {
+              // file not found, will create
+            }
+            const res = await github.repos.createOrUpdateFileContents({ owner, repo, path, message: `Add phpunit output for run ${run.id}`, content: Buffer.from(content).toString('base64'), sha });
+            core.setOutput('file-url', res.data.content.html_url);
+
+      - name: Post comment to issue with snippet
+        uses: actions/github-script@v7
+        env:
+          ISSUE_NUMBER: ${{ steps.find_issue.outputs.issue-number }}
+          FILE_URL: ${{ steps.upload_full.outputs.file-url }}
+        with:
+          script: |
+            const issue_number = parseInt(process.env.ISSUE_NUMBER);
+            const fs = require('fs');
+            const snippet = fs.readFileSync('phpunit-snippet.txt', 'utf8').slice(0, 64000);
+            const fileUrl = process.env.FILE_URL;
+            let body = `PHPUnit output (truncated):\n\n\n\`\`\`text\n${snippet}\n\`\`\`\n\nRun: ${context.payload.workflow_run.html_url}`;
+            if (fileUrl && fileUrl !== 'undefined') {
+              body += `\n\nFull log: ${fileUrl}`;
+            }
+            await github.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number, body });

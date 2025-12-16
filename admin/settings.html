@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Settings - Calius Digital Admin</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+    
+    <div class="admin-wrapper">
+        <div id="aria-notify" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-logo">Calius Admin</div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+            </div>
+            
+            <nav class="admin-nav">
+                <div class="admin-nav-section">
+                    <div class="admin-nav-title">Main</div>
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="/admin/index.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">📊</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/templates-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">🎨</span>
+                                <span>Templates</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/blog-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">📝</span>
+                                <span>Blog Posts</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/orders-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">🛒</span>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="admin-nav-section">
+                    <div class="admin-nav-title">Settings</div>
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="/admin/settings.html" class="admin-nav-link active">
+                                <span class="admin-nav-icon">⚙️</span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link" onclick="CaliusAuth.logout(); return false;">
+                                <span class="admin-nav-icon">🚪</span>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="admin-header-left">
+                    <h1 class="admin-header-title">Settings</h1>
+                </div>
+                
+                <div class="admin-header-right">
+                    <div class="admin-user-menu">
+                        <div class="admin-user-info">
+                            <div class="admin-user-name">Admin</div>
+                            <div class="admin-user-role">Administrator</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="admin-content">
+                
+                <!-- Site Settings -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Site Settings</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-alert info">
+                            <div class="admin-alert-icon">ℹ️</div>
+                            <div class="admin-alert-content">
+                                <div class="admin-alert-title">Static CMS Notice</div>
+                                <p>After making changes, you'll need to manually update <code>/data/settings.json</code> via cPanel File Manager.</p>
+                            </div>
+                        </div>
+                        
+                        <form id="site-settings-form" class="admin-form">
+                            <div class="admin-form-row">
+                                <div class="admin-form-group">
+                                    <label class="admin-form-label required">Site Name</label>
+                                    <input type="text" class="admin-form-input" id="site-name" value="Calius Digital" required>
+                                </div>
+                                <div class="admin-form-group">
+                                    <label class="admin-form-label required">Site URL</label>
+                                    <input type="url" class="admin-form-input" id="site-url" value="https://calius.digital" required>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-form-row">
+                                <div class="admin-form-group">
+                                    <label class="admin-form-label required">Support Email</label>
+                                    <input type="email" class="admin-form-input" id="support-email" value="support@calius.digital" required>
+                                </div>
+                                <div class="admin-form-group">
+                                    <label class="admin-form-label">Phone</label>
+                                    <input type="tel" class="admin-form-input" id="phone" value="+62-xxx-xxxx-xxxx">
+                                </div>
+                            </div>
+                            
+                            <div class="admin-form-group">
+                                <label class="admin-form-label">Default Language</label>
+                                <select class="admin-form-select" id="default-language">
+                                    <option value="en" selected>English</option>
+                                    <option value="id">Indonesian</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Save Site Settings</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Payment Gateway Settings -->
+                <div class="admin-card" style="margin-top: 2rem;">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Payment Gateway Settings</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        
+                        <!-- Stripe -->
+                        <h4 style="margin-bottom: 1rem;">Stripe</h4>
+                        <div class="admin-form-row">
+                            <div class="admin-form-group">
+                                <label class="admin-form-label">Public Key</label>
+                                <input type="text" class="admin-form-input" id="stripe-public-key" placeholder="pk_live_...">
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-form-label">Status</label>
+                                <select class="admin-form-select" id="stripe-enabled">
+                                    <option value="true" selected>Enabled</option>
+                                    <option value="false">Disabled</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <hr style="margin: 2rem 0;">
+                        
+                        <!-- PayPal -->
+                        <h4 style="margin-bottom: 1rem;">PayPal</h4>
+                        <div class="admin-form-row">
+                            <div class="admin-form-group">
+                                <label class="admin-form-label">Client ID</label>
+                                <input type="text" class="admin-form-input" id="paypal-client-id" placeholder="YOUR_PAYPAL_CLIENT_ID">
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-form-label">Status</label>
+                                <select class="admin-form-select" id="paypal-enabled">
+                                    <option value="true" selected>Enabled</option>
+                                    <option value="false">Disabled</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <hr style="margin: 2rem 0;">
+                        
+                        <!-- Midtrans -->
+                        <h4 style="margin-bottom: 1rem;">Midtrans</h4>
+                        <div class="admin-form-row">
+                            <div class="admin-form-group">
+                                <label class="admin-form-label">Client Key</label>
+                                <input type="text" class="admin-form-input" id="midtrans-client-key" placeholder="YOUR_MIDTRANS_CLIENT_KEY">
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-form-label">Status</label>
+                                <select class="admin-form-select" id="midtrans-enabled">
+                                    <option value="true" selected>Enabled</option>
+                                    <option value="false">Disabled</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary" onclick="savePaymentSettings()">Save Payment Settings</button>
+                    </div>
+                </div>
+                
+                <!-- SEO Settings -->
+                <div class="admin-card" style="margin-top: 2rem;">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">SEO Settings</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Meta Title (English)</label>
+                            <input type="text" class="admin-form-input" id="meta-title-en" value="Calius Digital - Premium High-Speed Website Templates">
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Meta Description (English)</label>
+                            <textarea class="admin-form-textarea" id="meta-desc-en" rows="3">Buy premium website templates with guaranteed high-speed performance.</textarea>
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Keywords</label>
+                            <input type="text" class="admin-form-input" id="keywords" value="premium templates, website templates, high speed">
+                            <div class="admin-form-help">Separate with commas</div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary" onclick="saveSEOSettings()">Save SEO Settings</button>
+                    </div>
+                </div>
+                
+                <!-- Logo & Branding -->
+                <div class="admin-card" style="margin-top: 2rem;">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Logo & Branding</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Current Logo</label>
+                            <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 0.5rem; margin-bottom: 1rem;">
+                                <img id="current-logo-img" src="/assets/images/logo.svg" alt="Logo" style="max-height: 60px;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%2260%22%3E%3Ctext x=%2210%22 y=%2240%22 font-family=%22Arial%22 font-size=%2230%22 fill=%22%232563eb%22%3ECalius Digital%3C/text%3E%3C/svg%3E'">
+                            </div>
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Upload New Logo</label>
+                            <input type="file" class="admin-form-input" id="logo-upload" accept="image/*">
+                            <div class="admin-form-help">Recommended: SVG or PNG, max 200x60px</div>
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Logo URL (Alternative)</label>
+                            <input type="text" class="admin-form-input" id="logo-url" value="/assets/images/logo.svg" placeholder="/assets/images/logo.svg">
+                            <div style="margin-top:.5rem; display:flex; gap:.5rem; align-items:center;">
+                                <input type="color" id="brand-color" value="#2563eb" title="Brand color" style="width:48px; height:36px; padding:0; border:none; background:transparent;" />
+                                <button class="btn btn-secondary" id="extract-brand-btn" type="button">Extract Color from Logo</button>
+                                <div class="admin-form-help" style="margin-left:.5rem">Pick or auto-extract brand color</div>
+                            </div>
+                            <div class="admin-form-help">Or enter direct URL to logo file</div>
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Favicon URL</label>
+                            <input type="text" class="admin-form-input" id="favicon-url" value="/assets/images/favicon.ico" placeholder="/assets/images/favicon.ico">
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary" onclick="saveLogoSettings()">Save Logo Settings</button>
+                    </div>
+                </div>
+                
+                <!-- Advanced SEO & Meta Data -->
+                <div class="admin-card" style="margin-top: 2rem;">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Advanced SEO & Meta Data</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <h4 style="margin-bottom: 1rem;">English Version</h4>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Meta Title</label>
+                            <input type="text" class="admin-form-input" id="meta-title-en" value="Calius Digital - Premium High-Speed Website Templates">
+                            <div class="admin-form-help">Recommended: 50-60 characters</div>
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Meta Description</label>
+                            <textarea class="admin-form-textarea" id="meta-desc-en" rows="3">Buy premium website templates with guaranteed high-speed performance. Business, E-commerce, Portfolio, Landing Page & Restaurant templates. Instant download, lifetime updates.</textarea>
+                            <div class="admin-form-help">Recommended: 150-160 characters</div>
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Keywords</label>
+                            <input type="text" class="admin-form-input" id="keywords-en" value="premium templates, website templates, high speed templates, responsive templates">
+                            <div class="admin-form-help">Separate with commas</div>
+                        </div>
+                        
+                        <hr style="margin: 2rem 0;">
+                        
+                        <h4 style="margin-bottom: 1rem;">Indonesian Version</h4>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Meta Title (ID)</label>
+                            <input type="text" class="admin-form-input" id="meta-title-id" value="Calius Digital - Template Website Premium Berkecepatan Tinggi">
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Meta Description (ID)</label>
+                            <textarea class="admin-form-textarea" id="meta-desc-id" rows="3">Beli template website premium dengan performa kecepatan tinggi terjamin. Template Business, E-commerce, Portfolio, Landing Page & Restaurant. Download instan, update selamanya.</textarea>
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Keywords (ID)</label>
+                            <input type="text" class="admin-form-input" id="keywords-id" value="template premium, template website, template kecepatan tinggi, template responsif">
+                        </div>
+                        
+                        <hr style="margin: 2rem 0;">
+                        
+                        <h4 style="margin-bottom: 1rem;">Social Media & Open Graph</h4>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">OG Image URL</label>
+                            <input type="text" class="admin-form-input" id="og-image" value="/assets/images/og-image.jpg" placeholder="/assets/images/og-image.jpg">
+                            <div class="admin-form-help">Recommended: 1200x630px</div>
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Twitter Card Type</label>
+                            <select class="admin-form-select" id="twitter-card">
+                                <option value="summary_large_image" selected>Summary Large Image</option>
+                                <option value="summary">Summary</option>
+                            </select>
+                        </div>
+                        
+                        <hr style="margin: 2rem 0;">
+                        
+                        <h4 style="margin-bottom: 1rem;">Analytics & Tracking</h4>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Google Analytics ID</label>
+                            <input type="text" class="admin-form-input" id="google-analytics" placeholder="G-XXXXXXXXXX">
+                            <div class="admin-form-help">Format: G-XXXXXXXXXX or UA-XXXXXXXXX-X</div>
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Google Tag Manager ID</label>
+                            <input type="text" class="admin-form-input" id="google-tag-manager" placeholder="GTM-XXXXXXX">
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Facebook Pixel ID</label>
+                            <input type="text" class="admin-form-input" id="facebook-pixel" placeholder="XXXXXXXXXXXXXXXX">
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary" onclick="saveAdvancedSEOSettings()">Save SEO & Meta Data</button>
+                    </div>
+                </div>
+                
+                <!-- Security Settings -->
+                <div class="admin-card" style="margin-top: 2rem;">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Security Settings</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <h4 style="margin-bottom: 1rem;">Change Admin Password</h4>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Current Password</label>
+                            <input type="password" class="admin-form-input" id="current-password" placeholder="Enter current password">
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">New Password</label>
+                            <input type="password" class="admin-form-input" id="new-password" placeholder="Enter new password">
+                            <div class="password-strength" style="height: 4px; background: var(--bg-secondary); border-radius: 2px; margin-top: 0.5rem; overflow: hidden;">
+                                <div id="password-strength-bar" style="height: 100%; width: 0; background: var(--error-color); transition: all 0.3s;"></div>
+                            </div>
+                            <div class="admin-form-help">Minimum 8 characters, include uppercase, lowercase, numbers, and special characters</div>
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Confirm New Password</label>
+                            <input type="password" class="admin-form-input" id="confirm-password" placeholder="Confirm new password">
+                        </div>
+                        
+                        <hr style="margin: 2rem 0;">
+                        
+                        <h4 style="margin-bottom: 1rem;">Two-Factor Authentication (2FA)</h4>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">2FA Status</label>
+                            <select class="admin-form-select" id="2fa-enabled">
+                                <option value="false" selected>Disabled</option>
+                                <option value="true">Enabled</option>
+                            </select>
+                            <div class="admin-form-help">Enable Google Authenticator for additional security</div>
+                        </div>
+                        
+                        <div id="2fa-setup" style="display: none; padding: 1rem; background: var(--bg-secondary); border-radius: 0.5rem; margin-top: 1rem;">
+                            <p style="margin-bottom: 1rem;"><strong>Setup Instructions:</strong></p>
+                            <ol style="margin-left: 1.5rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                                <li>Download Google Authenticator app on your phone</li>
+                                <li>Click "Generate QR Code" button below</li>
+                                <li>Scan the QR code with your app</li>
+                                <li>Enter the 6-digit code to verify</li>
+                                <li>Save your backup codes in a safe place</li>
+                            </ol>
+                            
+                            <button type="button" class="btn btn-primary" onclick="generate2FACode()" style="margin-bottom: 1rem;">
+                                🔐 Generate QR Code
+                            </button>
+                            
+                            <div id="qr-code-container" style="display: none;">
+                                <div style="text-align: center; padding: 1rem; background: white; border-radius: 0.5rem; margin-bottom: 1rem;">
+                                    <div id="qr-code" style="display: inline-block;"></div>
+                                </div>
+                                
+                                <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                                    <p style="margin-bottom: 0.5rem;"><strong>Manual Entry Key:</strong></p>
+                                    <code id="manual-key" style="display: block; padding: 0.5rem; background: var(--bg-secondary); border-radius: 0.25rem; word-break: break-all;"></code>
+                                </div>
+                                
+                                <div class="admin-form-group">
+                                    <label class="admin-form-label">Enter 6-digit code to verify:</label>
+                                    <input type="text" class="admin-form-input" id="2fa-verify-code" placeholder="000000" maxlength="6" pattern="[0-9]{6}">
+                                </div>
+                                
+                                <button type="button" class="btn btn-primary" onclick="verify2FACode()">
+                                    ✓ Verify Code
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <hr style="margin: 2rem 0;">
+                        
+                        <h4 style="margin-bottom: 1rem;">Session Settings</h4>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Session Timeout (minutes)</label>
+                            <input type="number" class="admin-form-input" id="session-timeout" value="60" min="15" max="1440">
+                            <div class="admin-form-help">Auto-logout after inactivity (15-1440 minutes)</div>
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Max Login Attempts</label>
+                            <input type="number" class="admin-form-input" id="max-login-attempts" value="5" min="3" max="10">
+                            <div class="admin-form-help">Lock account after failed attempts (3-10)</div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary" onclick="saveSecuritySettings()">Save Security Settings</button>
+                    </div>
+                </div>
+                
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/cms.js"></script>
+    <script src="/assets/js/2fa-qrcode.js"></script>
+    
+    <script>
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+        
+        // Save Payment Settings
+        function savePaymentSettings() {
+            const settings = {
+                stripe: {
+                    enabled: document.getElementById('stripe-enabled').value === 'true',
+                    publicKey: document.getElementById('stripe-public-key').value
+                },
+                paypal: {
+                    enabled: document.getElementById('paypal-enabled').value === 'true',
+                    clientId: document.getElementById('paypal-client-id').value
+                },
+                midtrans: {
+                    enabled: document.getElementById('midtrans-enabled').value === 'true',
+                    clientKey: document.getElementById('midtrans-client-key').value
+                }
+            };
+            saveSettingsPartial({ payment: settings }, 'Payment Settings');
+        }
+        
+        // Save Logo Settings
+        function saveLogoSettings() {
+            const logoVal = document.getElementById('logo-url').value;
+            const faviconVal = document.getElementById('favicon-url').value;
+            const brandColorVal = document.getElementById('brand-color')?.value || null;
+            const settings = {
+                logo: logoVal,
+                favicon: faviconVal,
+                brandColor: brandColorVal
+            };
+            saveSettingsPartial({ site: { logo: logoVal, favicon: faviconVal, brandColor: brandColorVal } }, 'Logo & Branding');
+            // apply immediately
+            if (brandColorVal) {
+                document.documentElement.style.setProperty('--brand-color', brandColorVal);
+                document.documentElement.style.setProperty('--primary-color', brandColorVal);
+            }
+        }
+        
+        // Save Advanced SEO Settings
+        function saveAdvancedSEOSettings() {
+            const settings = {
+                seo: {
+                    metaTitle: {
+                        en: document.getElementById('meta-title-en').value,
+                        id: document.getElementById('meta-title-id').value
+                    },
+                    metaDescription: {
+                        en: document.getElementById('meta-desc-en').value,
+                        id: document.getElementById('meta-desc-id').value
+                    },
+                    keywords: {
+                        en: document.getElementById('keywords-en').value,
+                        id: document.getElementById('keywords-id').value
+                    },
+                    ogImage: document.getElementById('og-image').value,
+                    twitterCard: document.getElementById('twitter-card').value,
+                    googleAnalytics: document.getElementById('google-analytics').value,
+                    googleTagManager: document.getElementById('google-tag-manager').value,
+                    facebookPixel: document.getElementById('facebook-pixel').value
+                }
+            };
+            
+            saveSettingsPartial(settings, 'Advanced SEO & Meta Data');
+        }
+        
+        // Save SEO Settings (Basic)
+        function saveSEOSettings() {
+            const settings = {
+                metaTitle: {
+                    en: document.getElementById('meta-title-en').value
+                },
+                metaDescription: {
+                    en: document.getElementById('meta-desc-en').value
+                },
+                keywords: document.getElementById('keywords').value
+            };
+            saveSettingsPartial({ seo: settings }, 'SEO Settings');
+        }
+
+        // Save partial settings: loads existing settings, merges, and posts to server
+        async function saveSettingsPartial(partial, title) {
+            try {
+                // Ensure authenticated
+                if (!CaliusAuth.requireAuth()) return;
+
+                // Button state handling (disable active button)
+                const activeBtn = document.activeElement && document.activeElement.tagName === 'BUTTON' ? document.activeElement : null;
+                if (activeBtn) { activeBtn.disabled = true; const prevText = activeBtn.textContent; activeBtn.textContent = 'Saving...'; }
+
+                // Load current settings
+                const current = await CaliusCMS.SettingsManager.load();
+                const merged = { ...(current || {}), ...partial };
+
+                const resp = await fetch('/admin/api/save-json.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ file: 'settings', data: merged })
+                });
+
+                const result = await resp.json();
+                if (!resp.ok) {
+                    alert(`${title} save failed: ${result.message || resp.statusText}`);
+                    return;
+                }
+
+                CaliusCMS.showNotification(`${title} saved successfully`, 'success');
+                // Refresh settings in memory
+                await CaliusCMS.SettingsManager.load();
+                if (activeBtn) { activeBtn.disabled = false; activeBtn.textContent = prevText; }
+            } catch (err) {
+                console.error('Save settings error', err);
+                alert('Save failed. See console for details.');
+                if (activeBtn) { activeBtn.disabled = false; activeBtn.textContent = prevText; }
+            }
+        }
+        
+        // Save Security Settings
+        async function saveSecuritySettings() {
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const twoFactorEnabled = document.getElementById('2fa-enabled').value === 'true';
+            const sessionTimeout = document.getElementById('session-timeout').value;
+            const maxLoginAttempts = document.getElementById('max-login-attempts').value;
+            
+            // Validate passwords
+            if (newPassword) {
+                if (!currentPassword) {
+                    alert('Please enter your current password');
+                    return;
+                }
+                
+                if (newPassword !== confirmPassword) {
+                    alert('New passwords do not match');
+                    return;
+                }
+                
+                if (newPassword.length < 8) {
+                    alert('Password must be at least 8 characters long');
+                    return;
+                }
+                
+                // Verify current password
+                const encoder = new TextEncoder();
+                const data = encoder.encode(currentPassword);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const currentPasswordHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                // Expected hash for "admin123"
+                const expectedHash = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
+                
+                if (currentPasswordHash !== expectedHash) {
+                    alert('Current password is incorrect');
+                    return;
+                }
+                
+                // Hash the new password
+                const encoder2 = new TextEncoder();
+                const data2 = encoder2.encode(newPassword);
+                const hashBuffer2 = await crypto.subtle.digest('SHA-256', data2);
+                const hashArray2 = Array.from(new Uint8Array(hashBuffer2));
+                const passwordHash = hashArray2.map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                // Generate complete users.json structure
+                const usersData = {
+                    "users": [
+                        {
+                            "id": "user-001",
+                        // Load current settings
+                        const current = await CaliusCMS.SettingsManager.load();
+                        const merged = { ...(current || {}), ...partial };
+
+                        // Show saving modal
+                        const modal = document.createElement('div');
+                        modal.className = 'admin-modal-overlay active';
+                        modal.innerHTML = `
+                            <div class="admin-modal">
+                                <div class="admin-modal-header"><h3 class="admin-modal-title">Saving ${title}...</h3></div>
+                                <div class="admin-modal-body"><div class="loading"></div></div>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+
+                        const resp = await fetch('/admin/api/save-json.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ file: 'settings', data: merged })
+                        });
+
+                        const result = await resp.json();
+                        modal.remove();
+                        if (!resp.ok) {
+                            // Show error modal with details
+                            showErrorModal(`${title} save failed`, result.message || resp.statusText);
+                            return;
+                        }
+
+                        CaliusCMS.showNotification(`${title} saved successfully`, 'success');
+                        // Refresh settings in memory
+                        await CaliusCMS.SettingsManager.load();
+                                "manage_blog",
+                                "manage_orders",
+                        showErrorModal('Save failed', err.message || String(err));
+                                "manage_settings",
+                                "view_analytics"
+
+                function showErrorModal(title, details) {
+                    const modal = document.createElement('div');
+                    modal.className = 'admin-modal-overlay active';
+                    modal.innerHTML = `
+                        <div class="admin-modal" style="max-width:700px;">
+                            <div class="admin-modal-header"><h3 class="admin-modal-title">${title}</h3></div>
+                            <div class="admin-modal-body">
+                                <p>${details}</p>
+                                <pre style="background:var(--bg-secondary); padding:1rem; border-radius:0.5rem; overflow:auto;">${details}</pre>
+                            </div>
+                            <div class="admin-modal-footer">
+                                <button class="btn btn-secondary" onclick="this.closest('.admin-modal-overlay').remove()">Close</button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                }
+                            ]
+                        }
+                    ],
+                    "sessions": [],
+                    "loginHistory": []
+                };
+                
+                // Call server change-password endpoint
+                try {
+                    const resp = await fetch('/admin/api/change-password.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ currentPassword: currentPassword, newPassword: newPassword })
+                    });
+                    const result = await resp.json();
+                    if (!resp.ok) {
+                        alert('Password change failed: ' + (result.message || resp.statusText));
+                        return;
+                    }
+                    alert('Password changed. You will be logged out; please login again.');
+                    window.location.href = '/admin/login.html';
+                    return;
+                } catch (err) {
+                    console.error('Password change error', err);
+                    alert('Password change failed. See console for details.');
+                    return;
+                }
+            }
+            
+            // If only session settings changed (no password change)
+            const settings = {
+                security: {
+                    twoFactorEnabled: twoFactorEnabled,
+                    sessionTimeout: parseInt(sessionTimeout) * 60,
+                    maxLoginAttempts: parseInt(maxLoginAttempts)
+                }
+            };
+            
+            showSaveInstructions('Security Settings (Session)', settings, '/data/settings.json');
+        }
+        
+        // Show password change instructions
+        function showPasswordChangeInstructions(usersData, newPassword) {
+            const jsonString = JSON.stringify(usersData, null, 2);
+            
+            const modal = document.createElement('div');
+            modal.className = 'admin-modal-overlay active';
+            modal.innerHTML = `
+                <div class="admin-modal" style="max-width: 700px;">
+                    <div class="admin-modal-header">
+                        <h3 class="admin-modal-title">🔐 Update Admin Password</h3>
+                        <button class="admin-modal-close" onclick="this.closest('.admin-modal-overlay').remove()">×</button>
+                    </div>
+                    <div class="admin-modal-body">
+                        <div class="admin-alert error" style="margin-bottom: 1.5rem;">
+                            <div class="admin-alert-icon">⚠️</div>
+                            <div class="admin-alert-content">
+                                <div class="admin-alert-title">IMPORTANT: Password Change Instructions</div>
+                                <p>Follow these steps carefully to update your password:</p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h4 style="margin-bottom: 0.5rem;">📝 Steps to Update:</h4>
+                            <ol style="margin-left: 1.5rem; line-height: 1.8;">
+                                <li>Copy the JSON below</li>
+                                <li>Login to cPanel File Manager</li>
+                                <li>Navigate to <code>/data/users.json</code></li>
+                                <li>Edit the file and <strong>REPLACE ALL CONTENT</strong> with the JSON below</li>
+                                <li>Save the file</li>
+                                <li>Logout from admin panel</li>
+                                <li>Login again with new password: <strong style="color: var(--primary-color);">${newPassword}</strong></li>
+                            </ol>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <strong>File to update:</strong> <code style="background: var(--bg-secondary); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">/data/users.json</code>
+                        </div>
+                        
+                        <textarea class="admin-form-textarea" rows="20" readonly style="font-family: monospace; font-size: 0.875rem;">${jsonString}</textarea>
+                        
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="navigator.clipboard.writeText(this.previousElementSibling.value); alert('✓ Copied to clipboard! Now update /data/users.json via cPanel')">
+                            📋 Copy Complete JSON to Clipboard
+                        </button>
+                        
+                        <div class="admin-alert warning" style="margin-top: 1rem;">
+                            <div class="admin-alert-icon">💡</div>
+                            <div class="admin-alert-content">
+                                <div class="admin-alert-title">Remember Your New Password</div>
+                                <p>New Password: <strong>${newPassword}</strong></p>
+                                <p style="margin-top: 0.5rem; font-size: 0.875rem;">Write this down before closing this window!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.admin-modal-overlay').remove()">Close</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        // Password strength indicator
+        document.addEventListener('DOMContentLoaded', function() {
+            const newPasswordInput = document.getElementById('new-password');
+            const strengthBar = document.getElementById('password-strength-bar');
+            
+            if (newPasswordInput && strengthBar) {
+                newPasswordInput.addEventListener('input', function() {
+                    const password = this.value;
+                    let strength = 0;
+                    
+                    if (password.length >= 8) strength += 25;
+                    if (password.length >= 12) strength += 25;
+                    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 25;
+                    if (/\d/.test(password)) strength += 12.5;
+                    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength += 12.5;
+                    
+                    strengthBar.style.width = strength + '%';
+                    
+                    if (strength < 40) {
+                        strengthBar.style.backgroundColor = '#ef4444';
+                    } else if (strength < 70) {
+                        strengthBar.style.backgroundColor = '#f59e0b';
+                    } else {
+                        strengthBar.style.backgroundColor = '#10b981';
+                    }
+                });
+            }
+            
+            // 2FA toggle
+            const twoFactorSelect = document.getElementById('2fa-enabled');
+            const twoFactorSetup = document.getElementById('2fa-setup');
+            
+            if (twoFactorSelect && twoFactorSetup) {
+                twoFactorSelect.addEventListener('change', function() {
+                    if (this.value === 'true') {
+                        twoFactorSetup.style.display = 'block';
+                    } else {
+                        twoFactorSetup.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Logo upload with auto-upload to server
+            const logoUpload = document.getElementById('logo-upload');
+            if (logoUpload) {
+                logoUpload.addEventListener('change', async function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        // Show preview first
+                        const reader = new FileReader();
+                        reader.onload = async function(event) {
+                            const dataUrl = event.target.result;
+                            
+                            // Ask user: Auto-upload or Manual?
+                            const useAutoUpload = confirm(
+                                '🚀 AUTO-UPLOAD AVAILABLE!\n\n' +
+                                'File: ' + file.name + '\n' +
+                                'Size: ' + (file.size / 1024).toFixed(2) + ' KB\n\n' +
+                                'Click OK to AUTO-UPLOAD to server\n' +
+                                'Click Cancel for MANUAL upload instructions'
+                            );
+                            
+                            if (useAutoUpload) {
+                                await autoUploadLogo(file, dataUrl);
+                            } else {
+                                showLogoUploadInstructions(file.name, dataUrl);
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+        
+        // Show logo upload instructions with preview
+        function showLogoUploadInstructions(fileName, dataUrl) {
+            const modal = document.createElement('div');
+            modal.className = 'admin-modal-overlay active';
+            modal.innerHTML = `
+                <div class="admin-modal" style="max-width: 600px;">
+                    <div class="admin-modal-header">
+                        <h3 class="admin-modal-title">📤 Upload Logo Instructions</h3>
+                        <button class="admin-modal-close" onclick="this.closest('.admin-modal-overlay').remove()">×</button>
+                    </div>
+                    <div class="admin-modal-body">
+                        <div class="admin-alert info" style="margin-bottom: 1.5rem;">
+                            <div class="admin-alert-icon">ℹ️</div>
+                            <div class="admin-alert-content">
+                                <div class="admin-alert-title">This is NOT an Error!</div>
+                                <p>Static CMS requires manual file upload via cPanel. Follow the steps below.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 0.5rem; margin-bottom: 1.5rem;">
+                            <p style="margin-bottom: 0.5rem;"><strong>Preview:</strong></p>
+                            <img src="${dataUrl}" alt="Logo Preview" style="max-width: 100%; max-height: 150px; border: 2px solid var(--border-color); border-radius: 0.5rem;">
+                            <p style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">File: <strong>${fileName}</strong></p>
+                        </div>
+                        
+                        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h4 style="margin-bottom: 0.5rem;">📝 Steps to Upload Logo:</h4>
+                            <ol style="margin-left: 1.5rem; line-height: 1.8;">
+                                <li>Save this file: <strong>${fileName}</strong></li>
+                                <li>Login to <strong>cPanel File Manager</strong></li>
+                                <li>Navigate to <code>/public_html/assets/images/</code></li>
+                                <li>Click <strong>"Upload"</strong> button</li>
+                                <li>Select and upload <strong>${fileName}</strong></li>
+                                <li>Go back to Settings page</li>
+                                <li>Update "Logo URL" field to: <code>/assets/images/${fileName}</code></li>
+                                <li>Click <strong>"Save Logo Settings"</strong></li>
+                            </ol>
+                        </div>
+                        
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid var(--border-color);">
+                            <p style="margin-bottom: 0.5rem;"><strong>📋 Copy this path:</strong></p>
+                            <input type="text" value="/assets/images/${fileName}" readonly style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 0.25rem; font-family: monospace;" onclick="this.select()">
+                            <button class="btn btn-sm btn-primary" style="margin-top: 0.5rem; width: 100%;" onclick="navigator.clipboard.writeText('/assets/images/${fileName}'); alert('✓ Path copied to clipboard!')">
+                                📋 Copy Path
+                            </button>
+                        </div>
+                        
+                                <div class="admin-alert success" role="status">
+                            <div class="admin-alert-icon">✓</div>
+                            <div class="admin-alert-content">
+                                <div class="admin-alert-title">Next Step</div>
+                                <p>After uploading via cPanel, paste the path above into the "Logo URL" field and save.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.admin-modal-overlay').remove()">Got It!</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Auto-upload logo to server (uses upload-handler.php)
+        async function autoUploadLogo(file, dataUrl) {
+            try {
+                // Load settings to get optional upload key
+                await CaliusCMS.SettingsManager.load();
+                const uploadKey = CaliusCMS.SettingsManager.get('security.uploadKey') || '';
+
+                const form = new FormData();
+                form.append('file', file);
+                form.append('type', 'logo');
+                if (uploadKey) form.append('uploadKey', uploadKey);
+
+                // Show uploading modal
+                const uploadingModal = document.createElement('div');
+                uploadingModal.className = 'admin-modal-overlay active';
+                uploadingModal.innerHTML = `
+                    <div class="admin-modal">
+                        <div class="admin-modal-header">
+                            <h3 class="admin-modal-title">Uploading Logo...</h3>
+                        </div>
+                        <div class="admin-modal-body">
+                            <p>Please wait while the file is being uploaded.</p>
+                            <div class="loading" style="margin-top: 1rem;"></div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(uploadingModal);
+
+                const resp = await fetch('/admin/upload-handler.php', {
+                    method: 'POST',
+                    body: form
+                });
+
+                const result = await resp.json();
+                uploadingModal.remove();
+
+                if (!resp.ok || !result.success) {
+                    alert('Upload failed: ' + (result.message || resp.statusText));
+                    // fallback to manual instructions
+                    showLogoUploadInstructions(file.name, dataUrl);
+                    return;
+                }
+
+                // Success - update logo url input and preview
+                const logoUrlInput = document.getElementById('logo-url');
+                if (logoUrlInput) {
+                    logoUrlInput.value = result.data.path;
+                    // Try to auto-extract brand color from uploaded logo
+                    try { extractBrandColor(result.data.path); } catch (e) {}
+                }
+
+                CaliusCMS.showNotification('Logo uploaded successfully', 'success');
+            } catch (err) {
+                console.error('Auto upload error:', err);
+                alert('Auto upload failed. See console for details.');
+                showLogoUploadInstructions(file.name, dataUrl);
+            }
+        }
+
+        // Extract brand color from a logo URL and set the color input
+        async function extractBrandColor(url) {
+            const colorInput = document.getElementById('brand-color');
+            if (!url || !colorInput) return null;
+
+            // Attempt to load image with crossOrigin to sample pixels
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                img.onload = function() {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        const w = 100, h = 100;
+                        canvas.width = w; canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        // draw scaled
+                        ctx.drawImage(img, 0, 0, w, h);
+                        const data = ctx.getImageData(0, 0, w, h).data;
+                        let r = 0, g = 0, b = 0, count = 0;
+                        for (let i = 0; i < data.length; i += 4*5) { // sample every 5th pixel
+                            r += data[i]; g += data[i+1]; b += data[i+2]; count++;
+                        }
+                        r = Math.round(r/count); g = Math.round(g/count); b = Math.round(b/count);
+                        const hex = '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
+                        colorInput.value = hex;
+                        // apply to document for live preview
+                        document.documentElement.style.setProperty('--brand-color', hex);
+                        document.documentElement.style.setProperty('--primary-color', hex);
+                        resolve(hex);
+                    } catch (err) {
+                        reject(err);
+                    }
+                };
+                img.onerror = function(e) { reject(new Error('Failed to load image for color extraction')); };
+                // if relative path, ensure absolute
+                if (url.startsWith('/')) img.src = url;
+                else img.src = url;
+            });
+        }
+        
+        // Show save instructions
+        function showSaveInstructions(title, data) {
+            const jsonString = JSON.stringify(data, null, 2);
+            
+            const modal = document.createElement('div');
+            modal.className = 'admin-modal-overlay active';
+            modal.innerHTML = `
+                <div class="admin-modal">
+                    <div class="admin-modal-header">
+                        <h3 class="admin-modal-title">Save ${title}</h3>
+                        <button class="admin-modal-close" onclick="this.closest('.admin-modal-overlay').remove()">×</button>
+                    </div>
+                    <div class="admin-modal-body">
+                        <div class="admin-alert warning">
+                            <div class="admin-alert-icon">⚠️</div>
+                            <div class="admin-alert-content">
+                                <div class="admin-alert-title">Manual File Update Required</div>
+                                <p>Copy the JSON below and update the corresponding section in <code>/data/settings.json</code> via cPanel File Manager</p>
+                            </div>
+                        </div>
+                        <textarea class="admin-form-textarea" rows="15" readonly>${jsonString}</textarea>
+                        <button class="btn btn-primary mt-2" style="width: 100%; margin-top: 1rem;" onclick="navigator.clipboard.writeText(this.previousElementSibling.value); alert('Copied to clipboard!')">
+                            📋 Copy to Clipboard
+                        </button>
+                    </div>
+                    <div class="admin-modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.admin-modal-overlay').remove()">Close</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!CaliusAuth.requireAuth()) {
+                return;
+            }
+            
+            console.log('Settings page loaded');
+            // populate fields from settings.json when available
+            (async function populateSettings() {
+                try {
+                    const s = await CaliusCMS.SettingsManager.load();
+                    const site = s?.site || {};
+                    if (site) {
+                        if (site.logo) document.getElementById('logo-url').value = site.logo;
+                        if (site.logo) {
+                            const img = document.getElementById('current-logo-img');
+                            if (img) img.src = site.logo;
+                        }
+                        if (site.favicon) document.getElementById('favicon-url').value = site.favicon;
+                        if (site.brandColor) {
+                            const colorInput = document.getElementById('brand-color');
+                            if (colorInput) colorInput.value = site.brandColor;
+                            document.documentElement.style.setProperty('--brand-color', site.brandColor);
+                            document.documentElement.style.setProperty('--primary-color', site.brandColor);
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not load settings for populate', e);
+                }
+            })();
+
+            // wire up extract button
+            const extractBtn = document.getElementById('extract-brand-btn');
+                if (extractBtn) {
+                extractBtn.addEventListener('click', async function() {
+                    const url = document.getElementById('logo-url').value;
+                    try {
+                        await extractBrandColor(url);
+                        CaliusCMS.showNotification('Brand color extracted', 'success');
+                    } catch (err) {
+                        alert('Failed to extract color: ' + err.message);
+                    }
+                });
+                // keyboard activation (Enter/Space)
+                extractBtn.addEventListener('keydown', async function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            }
+            // update preview when logo-url changes
+            const logoUrlInput = document.getElementById('logo-url');
+            if (logoUrlInput) {
+                logoUrlInput.addEventListener('input', function() {
+                    const img = document.getElementById('current-logo-img');
+                    if (img) img.src = this.value;
+                });
+            }
+        });
+    </script>
+    
+</body>
+</html>

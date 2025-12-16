@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin Login - Calius Digital</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            padding: 2.5rem;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .login-form {
+            margin-top: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .password-strength {
+            height: 4px;
+            background-color: var(--bg-secondary);
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            background-color: var(--error-color);
+            transition: all 0.3s;
+        }
+        
+        .login-error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            display: none;
+        }
+        
+        .login-error.show {
+            display: block;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .login-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .login-footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .login-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        #2fa-section {
+            display: none;
+        }
+        
+        .info-box {
+            background-color: rgba(37, 99, 235, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-box-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-box-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .lockout-message {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--warning-color);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-logo">🔐 Calius Digital</div>
+            <p class="login-subtitle">Admin Panel Login</p>
+        </div>
+        
+        <div id="login-error" class="login-error"></div>
+        
+        <form id="login-form" class="login-form">
+            <div class="form-group">
+                <label for="username" class="form-label">Username or Email</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    class="form-input" 
+                    placeholder="Enter your username or email"
+                    required
+                    autocomplete="username"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-input" 
+                    placeholder="Enter your password"
+                    required
+                    autocomplete="current-password"
+                >
+                <div class="password-strength">
+                    <div id="password-strength" class="password-strength-bar"></div>
+                </div>
+            </div>
+            
+            <div id="2fa-section">
+                <div class="info-box">
+                    <div class="info-box-title">Two-Factor Authentication</div>
+                    <div class="info-box-text">
+                        Enter the 6-digit code from your Google Authenticator app
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="totp-token" class="form-label">Authentication Code</label>
+                    <input 
+                        type="text" 
+                        id="totp-token" 
+                        name="totp-token" 
+                        class="form-input" 
+                        placeholder="000000"
+                        maxlength="6"
+                        pattern="[0-9]{6}"
+                        autocomplete="one-time-code"
+                    >
+                </div>
+            </div>
+            
+            <button type="submit" class="login-btn">
+                Login
+            </button>
+        </form>
+        
+        <div class="login-footer">
+            <p>
+                <a href="/">← Back to Website</a>
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.75rem;">
+                Default credentials: admin / admin123 (Change after first login)
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/assets/js/auth.js"></script>
+    
+    <script>
+        // Check for lockout on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const lockoutUntil = localStorage.getItem('lockout_until');
+            if (lockoutUntil) {
+                const lockoutTime = parseInt(lockoutUntil);
+                if (Date.now() < lockoutTime) {
+                    const remainingMinutes = Math.ceil((lockoutTime - Date.now()) / 60000);
+                    const errorDiv = document.getElementById('login-error');
+                    errorDiv.innerHTML = `
+                        <div class="lockout-message">
+                            <strong>⚠️ Account Locked</strong><br>
+                            Too many failed login attempts. Please try again in ${remainingMinutes} minute(s).
+                        </div>
+                    `;
+                    errorDiv.classList.add('show');
+                    document.getElementById('login-form').style.display = 'none';
+                    
+                    // Auto-refresh when lockout expires
+                    setTimeout(() => {
+                        location.reload();
+                    }, (lockoutTime - Date.now()));
+                }
+            }
+        });
+    </script>
+    
+</body>
+</html>

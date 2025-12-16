@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <title>Checkout - Calius Digital</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+    
+    <style>
+        .checkout-header {
+            padding-top: calc(var(--header-height) + var(--spacing-xl));
+            padding-bottom: var(--spacing-xl);
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .checkout-steps {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .checkout-step {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: white;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .checkout-step.active {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .checkout-step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .checkout-step.active .checkout-step-number {
+            background-color: white;
+            color: var(--primary-color);
+        }
+        
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--spacing-2xl);
+            margin-top: var(--spacing-2xl);
+        }
+        
+        .checkout-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .checkout-section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+        
+        .payment-methods {
+            display: grid;
+            gap: var(--spacing-md);
+        }
+        
+        .payment-method-option {
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        
+        .payment-method-option:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .payment-method-option.active {
+            border-color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+        
+        .payment-method-logo {
+            width: 60px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .payment-method-info {
+            flex: 1;
+        }
+        
+        .payment-method-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .payment-method-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .payment-form {
+            display: none;
+            margin-top: var(--spacing-lg);
+            padding: var(--spacing-lg);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-md);
+        }
+        
+        .payment-form.active {
+            display: block;
+        }
+        
+        .order-summary {
+            position: sticky;
+            top: calc(var(--header-height) + var(--spacing-lg));
+        }
+        
+        .order-item {
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .order-item-image {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+        }
+        
+        .order-item-info {
+            flex: 1;
+        }
+        
+        .order-item-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .order-item-category {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .order-item-price {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .order-totals {
+            border-top: 2px solid var(--border-color);
+            padding-top: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+        
+        .order-total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .order-total-row.final {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            background-color: rgba(16, 185, 129, 0.1);
+            border-radius: var(--radius-md);
+            margin-top: var(--spacing-md);
+            font-size: 0.875rem;
+            color: var(--success-color);
+        }
+        
+        @media (max-width: 1024px) {
+            .checkout-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .order-summary {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Header / Navigation -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="/" class="logo">
+                <span>Calius Digital</span>
+            </a>
+            
+            <nav class="nav">
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="id">ID</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Checkout Header -->
+    <section class="checkout-header">
+        <div class="container">
+            <h1 class="text-center" data-i18n="checkout.title">Checkout</h1>
+            
+            <div class="checkout-steps">
+                <div class="checkout-step active">
+                    <span class="checkout-step-number">1</span>
+                    <span>Billing Info</span>
+                </div>
+                <div class="checkout-step">
+                    <span class="checkout-step-number">2</span>
+                    <span>Payment</span>
+                </div>
+                <div class="checkout-step">
+                    <span class="checkout-step-number">3</span>
+                    <span>Complete</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Content -->
+    <section class="section">
+        <div class="container">
+            <div class="checkout-layout">
+                <!-- Left Column - Forms -->
+                <div>
+                    <form id="checkout-form">
+                        <!-- Billing Information -->
+                        <div class="checkout-section">
+                            <h2 class="checkout-section-title" data-i18n="checkout.billing-info">Billing Information</h2>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="form.first-name">First Name</label>
+                                    <input type="text" name="firstName" class="form-input" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="form.last-name">Last Name</label>
+                                    <input type="text" name="lastName" class="form-input" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="form.email">Email Address</label>
+                                <input type="email" name="email" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="form.country">Country</label>
+                                    <select name="country" class="form-select" required>
+                                        <option value="">Select Country</option>
+                                        <option value="US">United States</option>
+                                        <option value="ID">Indonesia</option>
+                                        <option value="GB">United Kingdom</option>
+                                        <option value="AU">Australia</option>
+                                        <option value="CA">Canada</option>
+                                        <option value="SG">Singapore</option>
+                                        <option value="MY">Malaysia</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="form.phone">Phone Number</label>
+                                    <input type="tel" name="phone" class="form-input">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Method -->
+                        <div class="checkout-section">
+                            <h2 class="checkout-section-title" data-i18n="checkout.payment-method">Payment Method</h2>
+                            
+                            <div class="payment-methods">
+                                <div class="payment-method-option" data-method="stripe">
+                                    <div class="payment-method-logo" style="background: #635bff; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; border-radius: 4px;">Stripe</div>
+                                    <div class="payment-method-info">
+                                        <div class="payment-method-name">Credit / Debit Card</div>
+                                        <div class="payment-method-desc">Secure payment via Stripe</div>
+                                    </div>
+                                    <input type="radio" name="payment-method" value="stripe">
+                                </div>
+                                
+                                <div class="payment-method-option" data-method="paypal">
+                                    <div class="payment-method-logo" style="background: #0070ba; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; border-radius: 4px;">PayPal</div>
+                                    <div class="payment-method-info">
+                                        <div class="payment-method-name">PayPal</div>
+                                        <div class="payment-method-desc">Pay with your PayPal account</div>
+                                    </div>
+                                    <input type="radio" name="payment-method" value="paypal">
+                                </div>
+                                
+                                <div class="payment-method-option" data-method="midtrans">
+                                    <div class="payment-method-logo" style="background: #ff5f00; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; border-radius: 4px; font-size: 0.75rem;">Midtrans</div>
+                                    <div class="payment-method-info">
+                                        <div class="payment-method-name">Midtrans</div>
+                                        <div class="payment-method-desc">Indonesian payment methods</div>
+                                    </div>
+                                    <input type="radio" name="payment-method" value="midtrans">
+                                </div>
+                            </div>
+                            
+                            <!-- Stripe Card Form -->
+                            <div class="payment-form" data-method="stripe">
+                                <div id="stripe-card-element"></div>
+                            </div>
+                            
+                            <!-- PayPal Button Container -->
+                            <div class="payment-form" data-method="paypal">
+                                <div id="paypal-button-container"></div>
+                            </div>
+                            
+                            <!-- Midtrans Info -->
+                            <div class="payment-form" data-method="midtrans">
+                                <p style="text-align: center; color: var(--text-secondary);">
+                                    You will be redirected to Midtrans payment page
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" data-i18n="checkout.place-order">
+                            Place Order
+                        </button>
+                        
+                        <div class="secure-badge">
+                            <span style="font-size: 1.5rem;">🔒</span>
+                            <span>Secure SSL encrypted payment. Your information is safe.</span>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Right Column - Order Summary -->
+                <div>
+                    <div class="checkout-section order-summary">
+                        <h2 class="checkout-section-title" data-i18n="checkout.order-summary">Order Summary</h2>
+                        
+                        <div id="order-items">
+                            <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">
+                                Loading cart items...
+                            </p>
+                        </div>
+                        
+                        <div class="order-totals">
+                            <div class="order-total-row">
+                                <span data-i18n="cart.subtotal">Subtotal</span>
+                                <span id="order-subtotal">$0.00</span>
+                            </div>
+                            <div class="order-total-row">
+                                <span data-i18n="cart.tax">Tax</span>
+                                <span id="order-tax">$0.00</span>
+                            </div>
+                            <div class="order-total-row final">
+                                <span data-i18n="cart.total">Total</span>
+                                <span id="order-total">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="/assets/js/language.js"></script>
+    <script src="/assets/js/payment.js"></script>
+    <script src="/assets/js/main.js"></script>
+    
+    <script>
+        let cartItems = [];
+        
+        // Load cart items
+        async function loadCart() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                
+                if (cart.length === 0) {
+                    window.location.href = '/templates.html';
+                    return;
+                }
+                
+                // Load template details
+                const response = await fetch('/data/templates.json');
+                const data = await response.json();
+                
+                cartItems = cart.map(item => {
+                    const template = data.templates.find(t => t.id === item.id);
+                    return {
+                        ...template,
+                        quantity: item.quantity || 1
+                    };
+                });
+                
+                displayOrderSummary();
+            } catch (error) {
+                console.error('Error loading cart:', error);
+            }
+        }
+        
+        // Display order summary
+        function displayOrderSummary() {
+            const lang = window.LanguageManager.getLanguage();
+            const itemsContainer = document.getElementById('order-items');
+            
+            itemsContainer.innerHTML = cartItems.map(item => `
+                <div class="order-item">
+                    <img src="${item.previewImage}" alt="${item.name[lang]}" class="order-item-image">
+                    <div class="order-item-info">
+                        <div class="order-item-title">${item.name[lang]}</div>
+                        <div class="order-item-category">${item.category}</div>
+                    </div>
+                    <div class="order-item-price">$${(item.salePrice || item.price).toFixed(2)}</div>
+                </div>
+            `).join('');
+            
+            // Calculate totals
+            const subtotal = cartItems.reduce((sum, item) => sum + (item.salePrice || item.price), 0);
+            const tax = 0; // No tax for digital products
+            const total = subtotal + tax;
+            
+            document.getElementById('order-subtotal').textContent = '$' + subtotal.toFixed(2);
+            document.getElementById('order-tax').textContent = '$' + tax.toFixed(2);
+            document.getElementById('order-total').textContent = '$' + total.toFixed(2);
+        }
+        
+        // Payment method selection
+        document.querySelectorAll('.payment-method-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const method = this.dataset.method;
+                
+                // Update active state
+                document.querySelectorAll('.payment-method-option').forEach(opt => {
+                    opt.classList.remove('active');
+                    opt.querySelector('input[type="radio"]').checked = false;
+                });
+                
+                this.classList.add('active');
+                this.querySelector('input[type="radio"]').checked = true;
+                
+                // Show payment form
+                document.querySelectorAll('.payment-form').forEach(form => {
+                    form.classList.remove('active');
+                });
+                
+                const paymentForm = document.querySelector(`.payment-form[data-method="${method}"]`);
+                if (paymentForm) {
+                    paymentForm.classList.add('active');
+                }
+                
+                // Select payment method in payment manager
+                if (window.CaliusPayment) {
+                    window.CaliusPayment.PaymentManager.selectPaymentMethod(method);
+                }
+            });
+        });
+        
+        // Form submission
+        document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const paymentMethod = formData.get('payment-method');
+            
+            if (!paymentMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+            
+            const customerData = {
+                firstName: formData.get('firstName'),
+                lastName: formData.get('lastName'),
+                email: formData.get('email'),
+                country: formData.get('country'),
+                phone: formData.get('phone')
+            };
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            try {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="loading"></span> Processing...';
+                
+                // Calculate total
+                const total = cartItems.reduce((sum, item) => sum + (item.salePrice || item.price), 0);
+                
+                // Process payment
+                const paymentResult = await window.CaliusPayment.PaymentManager.processPayment({
+                    customer: customerData,
+                    items: cartItems,
+                    total: total
+                });
+                
+                // Create order
+                const order = await window.CaliusPayment.OrderCreator.createOrder(
+                    cartItems,
+                    customerData,
+                    paymentResult
+                );
+                
+                // Clear cart
+                localStorage.removeItem('cart');
+                
+                // Redirect to success page
+                window.location.href = `/order-success.html?order=${order.orderNumber}`;
+                
+            } catch (error) {
+                console.error('Checkout error:', error);
+                alert('Payment failed: ' + error.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCart();
+        });
+    </script>
+    
+</body>
+</html>
