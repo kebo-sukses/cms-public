@@ -46,7 +46,9 @@ if (file_exists($settingsPath)) {
     }
 }
 
-if ($configuredUploadKey !== '') {
+// If an uploadKey is configured, require it only for non-authenticated requests.
+// Authenticated admin users who passed CSRF validation above may upload without the key.
+if ($configuredUploadKey !== '' && !$isAuthenticated) {
     $providedKey = '';
     // Accept header or form field
     if (isset($_SERVER['HTTP_X_UPLOAD_KEY'])) {
@@ -56,6 +58,27 @@ if ($configuredUploadKey !== '') {
     }
 
     if ($providedKey !== $configuredUploadKey) {
+        // log audit entry for invalid upload attempt with helpful debugging info
+        if (file_exists(__DIR__ . '/api/audit_helper.php')) {
+            require_once __DIR__ . '/api/audit_helper.php';
+            $sessionUser = $_SESSION['calius_user']['username'] ?? null;
+            $hasCsrf = !empty($_SERVER['HTTP_X_CSRF_TOKEN']) || !empty($_SERVER['HTTP_X_CSRF_TOKEN']);
+            $headerKeys = array_keys(getallheaders());
+            $maskedProvided = $providedKey ? (substr($providedKey,0,4) . '...' . substr($providedKey,-4)) : null;
+            $maskedConfigured = $configuredUploadKey ? (substr($configuredUploadKey,0,4) . '...' . substr($configuredUploadKey,-4)) : null;
+            write_audit_entry([
+                'event' => 'upload_failed',
+                'reason' => 'invalid_upload_key',
+                'method' => $_SERVER['REQUEST_METHOD'] ?? 'POST',
+                'type' => $_POST['type'] ?? 'unknown',
+                'authenticated' => $isAuthenticated ? true : false,
+                'session_user' => $sessionUser,
+                'csrf_present' => $hasCsrf ? true : false,
+                'providedKey' => $maskedProvided,
+                'configuredKey' => $maskedConfigured ? 'configured' : 'not_configured',
+                'headers' => $headerKeys
+            ]);
+        }
         http_response_code(403);
         echo json_encode([
             'success' => false,
@@ -235,6 +258,33 @@ if ($fileExtension === 'zip' && $uploadType === 'template') {
 
 require_once __DIR__ . '/api/upload_helpers.php';
 
+// Quick storage health check for template uploads
+if ($uploadType === 'template') {
+    $checkErr = null;
+    $artifactsDir = __DIR__ . '/../data/artifacts/templates/';
+    if (file_exists($artifactsDir) && !is_dir($artifactsDir)) {
+        $checkErr = 'Storage path exists but is not a directory: ' . $artifactsDir;
+    } elseif (file_exists($artifactsDir) && !is_writable($artifactsDir)) {
+        $checkErr = 'Storage directory is not writable: ' . $artifactsDir;
+    } else {
+        if (!is_dir($artifactsDir)) {
+            if (!@mkdir($artifactsDir, 0755, true)) {
+                $checkErr = 'Failed to create storage directory: ' . $artifactsDir;
+            }
+        }
+    }
+
+    if ($checkErr !== null) {
+        if (file_exists(__DIR__ . '/api/audit_helper.php')) {
+            require_once __DIR__ . '/api/audit_helper.php';
+            write_audit_entry(['event' => 'upload_failed', 'reason' => 'storage_error', 'detail' => $checkErr, 'type' => 'template']);
+        }
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Storage error: ' . $checkErr]);
+        exit;
+    }
+}
+
 // Run virus scan
 if (!run_virus_scan($file['tmp_name'])) {
     http_response_code(400);
@@ -275,8 +325,14 @@ if (!is_dir($config['path'])) {
 if ($uploadType === 'template') {
     // Use helper to save artifact (moves file, computes checksum, writes metadata)
     $uploader = $_SESSION['calius_user']['username'] ?? ($_SESSION['calius_admin'] ? 'admin' : null);
-    $artifact = save_template_artifact($file['tmp_name'], $file['name'], $uploader);
+    $version = isset($_POST['version']) ? trim($_POST['version']) : null;
+    $artifact = save_template_artifact($file['tmp_name'], $file['name'], $uploader, $version);
     if (!$artifact) {
+        // write audit entry for failed save
+        if (file_exists(__DIR__ . '/api/audit_helper.php')) {
+            require_once __DIR__ . '/api/audit_helper.php';
+            write_audit_entry(['event' => 'upload_failed', 'reason' => 'save_failed', 'file' => $file['name'], 'uploader' => $uploader]);
+        }
         http_response_code(500);
         echo json_encode(['success' => false, 'message' => 'Failed to save artifact']);
         exit;
