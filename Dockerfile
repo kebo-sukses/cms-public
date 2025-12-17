@@ -15,8 +15,8 @@ WORKDIR /app
 # Install PHP extensions required for integration tests (curl)
 RUN docker-php-ext-install curl || true
 
-# Update ClamAV database (best-effort)
-RUN if command -v freshclam >/dev/null 2>&1; then freshclam || true; fi
+# Update ClamAV database (best-effort). Redirect stderr to hide benign config warnings when clamd is not configured.
+RUN if command -v freshclam >/dev/null 2>&1; then freshclam 2>/dev/null || true; fi
 
 # Default: install dependencies and run PHPUnit
 CMD ["bash", "-lc", "composer install --no-interaction --prefer-dist && ./vendor/bin/phpunit --configuration phpunit.xml --verbose"]

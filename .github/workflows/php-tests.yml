@@ -43,7 +43,7 @@ jobs:
       - name: Run tests in Docker container (with integration tests enabled)
         run: |
           docker run --rm -e ENABLE_INTEGRATION=1 -v ${{ github.workspace }}:/app -v $HOME/.composer/cache:/tmp/composer-cache -e COMPOSER_CACHE_DIR=/tmp/composer-cache -w /app calius-tests:latest \
-            bash -lc "composer config cache-dir /tmp/composer-cache && composer install --no-interaction --prefer-dist && ./vendor/bin/phpunit --configuration phpunit.xml --verbose > phpunit-output.txt || (cat phpunit-output.txt && exit 1)"
+            bash -lc "git config --global --add safe.directory /app && composer config cache-dir /tmp/composer-cache && composer install --no-interaction --prefer-dist && ./vendor/bin/phpunit --configuration phpunit.xml --verbose > phpunit-output.txt || (cat phpunit-output.txt && exit 1)"
       - name: Upload test output
         uses: actions/upload-artifact@v4
         with:
