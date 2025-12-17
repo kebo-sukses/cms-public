@@ -490,12 +490,15 @@
                 if (!json.entries || json.entries.length === 0) { container.innerHTML = '<em>No artifacts uploaded yet</em>'; return; }
                 container.innerHTML = json.entries.map(e => `
                     <div style="display:flex; gap:1rem; align-items:center; padding:0.5rem; border-bottom:1px solid var(--border);">
-                        <div style="flex:1">
+                        <div style="flex:2">
                             <strong>${e.original_name}</strong><br>
-                            <small>Uploaded: ${e.uploaded_at} • Size: ${Math.round(e.size/1024)} KB</small>
+                            <small>Version: ${e.version || '-'} • Uploaded: ${e.uploaded_at}</small>
                         </div>
-                        <div>
+                        <div style="flex:1">${e.scan_result || 'unknown'}</div>
+                        <div style="flex:1"><small>Size: ${Math.round(e.size/1024)} KB</small></div>
+                        <div style="display:flex; gap:0.5rem;">
                             <a class="btn" href="/admin/api/template-artifact-download.php?id=${e.id}">Download</a>
+                            <button class="btn btn-danger" onclick="deleteArtifact('${e.id}')">Delete</button>
                         </div>
                     </div>
                 `).join('');
@@ -532,6 +535,20 @@
                 loadArtifacts();
                 CaliusCMS.showNotification('Template uploaded successfully', 'success');
             } catch (err) { console.error(err); alert('Upload error'); progress.style.display='none'; }
+        }
+
+        async function deleteArtifact(id) {
+            if (!confirm('Delete this artifact? This cannot be undone.')) return;
+            const form = new FormData(); form.append('id', id);
+            const headers = {};
+            if (window.CaliusCMS && window.CaliusCMS.auth && window.CaliusCMS.auth.csrfToken) headers['X-CSRF-Token'] = window.CaliusCMS.auth.csrfToken;
+            try {
+                const resp = await fetch('/admin/api/delete-artifact.php', { method: 'POST', body: form, headers });
+                const json = await resp.json();
+                if (!resp.ok || !json.success) { alert('Delete failed: ' + (json.message || resp.statusText)); return; }
+                CaliusCMS.showNotification('Artifact deleted', 'success');
+                loadArtifacts();
+            } catch (err) { console.error(err); alert('Delete failed'); }
         }
         
         // Delete template
