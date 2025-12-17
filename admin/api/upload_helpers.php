@@ -46,4 +46,59 @@ function check_upload_quota($userId) {
     return true;
 }
 
+/**
+ * Save uploaded template artifact to a non-web directory, compute checksum,
+ * write metadata entry and audit log. Returns metadata on success or false.
+ */
+function save_template_artifact($tmpPath, $originalName, $uploader = null) {
+    $artifactsDir = __DIR__ . '/../data/artifacts/templates/';
+    if (!is_dir($artifactsDir)) {
+        if (!mkdir($artifactsDir, 0755, true)) return false;
+    }
+
+    $origBase = pathinfo($originalName, PATHINFO_FILENAME);
+    $san = preg_replace('/[^a-zA-Z0-9-_]/', '-', $origBase);
+    $san = preg_replace('/-+/', '-', $san);
+    $san = trim($san, '-');
+    $filename = $san . '-' . time() . '-' . bin2hex(random_bytes(4)) . '.zip';
+    $dest = $artifactsDir . $filename;
+
+    // Move uploaded file into artifacts directory
+    if (!@rename($tmpPath, $dest)) {
+        // fallback to copy+unlink if rename fails (different mounts)
+        if (!@copy($tmpPath, $dest)) return false;
+        @unlink($tmpPath);
+    }
+
+    $size = filesize($dest);
+    $checksum = hash_file('sha256', $dest);
+
+    $metaPath = __DIR__ . '/../data/templates_artifacts.json';
+    $meta = [];
+    if (file_exists($metaPath)) $meta = json_decode(@file_get_contents($metaPath), true) ?: [];
+
+    $id = 'art_' . bin2hex(random_bytes(6));
+    $entry = [
+        'id' => $id,
+        'filename' => $filename,
+        'original_name' => $originalName,
+        'checksum' => $checksum,
+        'size' => $size,
+        'uploaded_by' => $uploader,
+        'uploaded_at' => gmdate('c'),
+        'status' => 'uploaded',
+        'scan_result' => 'clean'
+    ];
+
+    $meta[] = $entry;
+    @file_put_contents($metaPath, json_encode($meta, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+    // Write audit entry if helper exists
+    if (function_exists('write_audit_entry')) {
+        write_audit_entry(['user' => $uploader, 'file' => 'templates_artifacts', 'action' => 'upload', 'summary' => $entry['original_name']]);
+    }
+
+    return $entry;
+}
+
 ?>

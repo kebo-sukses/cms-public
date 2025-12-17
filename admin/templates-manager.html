@@ -81,6 +81,9 @@
                 </div>
                 
                 <div class="admin-header-right">
+                    <button class="btn btn-secondary" id="upload-template-btn" onclick="showUploadTemplateModal()">
+                        📤 Upload Template ZIP
+                    </button>
                     <button class="btn btn-primary" id="add-template-btn" onclick="showAddTemplateModal()">
                         ➕ Add New Template
                     </button>
@@ -119,6 +122,12 @@
                         <h3 class="admin-card-title">All Templates</h3>
                     </div>
                     <div class="admin-card-body">
+                        <div class="admin-card" style="margin-bottom: 1rem;">
+                            <div class="admin-card-body">
+                                <h4>Uploaded Template Artifacts</h4>
+                                <div id="artifacts-list">Loading artifacts...</div>
+                            </div>
+                        </div>
                         <div class="admin-table-wrapper">
                             <table class="admin-table" id="templates-table">
                                 <thead>
@@ -256,6 +265,31 @@
             <div class="admin-modal-footer">
                 <button class="btn btn-secondary" onclick="closeTemplateModal()">Cancel</button>
                 <button class="btn btn-primary" onclick="saveTemplate()">Save Template</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Template Modal -->
+    <div class="admin-modal-overlay" id="upload-modal">
+        <div class="admin-modal" style="max-width: 600px;">
+            <div class="admin-modal-header">
+                <h3 class="admin-modal-title">Upload Template ZIP</h3>
+                <button class="admin-modal-close" onclick="closeUploadModal()">×</button>
+            </div>
+            <div class="admin-modal-body">
+                <div class="admin-form-group">
+                    <label class="admin-form-label required">Template ZIP</label>
+                    <input type="file" id="template-zip-file" accept=".zip" class="admin-form-input">
+                </div>
+                <div class="admin-form-group">
+                    <label class="admin-form-label">Version / Tag (optional)</label>
+                    <input type="text" id="template-version" class="admin-form-input" placeholder="v1.0.0">
+                </div>
+                <div id="upload-progress" style="display:none; margin-top: 1rem;"></div>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-secondary" onclick="closeUploadModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="uploadTemplate()">Upload</button>
             </div>
         </div>
     </div>
@@ -434,6 +468,71 @@
                 if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Template'; }
             }
         }
+
+        // Upload template UI helpers
+        function showUploadTemplateModal() {
+            if (!CaliusAuth.requireAuth()) return;
+            if (!CaliusAuth.hasPermission('manage_templates')) { alert('Permission required: manage_templates'); return; }
+            document.getElementById('template-zip-file').value = '';
+            document.getElementById('template-version').value = '';
+            document.getElementById('upload-progress').style.display = 'none';
+            document.getElementById('upload-modal').classList.add('active');
+        }
+
+        function closeUploadModal() { document.getElementById('upload-modal').classList.remove('active'); }
+
+        async function loadArtifacts() {
+            try {
+                const resp = await fetch('/admin/api/template-artifacts.php');
+                if (!resp.ok) throw new Error('Failed to load');
+                const json = await resp.json();
+                const container = document.getElementById('artifacts-list');
+                if (!json.entries || json.entries.length === 0) { container.innerHTML = '<em>No artifacts uploaded yet</em>'; return; }
+                container.innerHTML = json.entries.map(e => `
+                    <div style="display:flex; gap:1rem; align-items:center; padding:0.5rem; border-bottom:1px solid var(--border);">
+                        <div style="flex:1">
+                            <strong>${e.original_name}</strong><br>
+                            <small>Uploaded: ${e.uploaded_at} • Size: ${Math.round(e.size/1024)} KB</small>
+                        </div>
+                        <div>
+                            <a class="btn" href="/admin/api/template-artifact-download.php?id=${e.id}">Download</a>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) { console.error(err); document.getElementById('artifacts-list').innerText = 'Failed to load artifacts'; }
+        }
+
+        async function uploadTemplate() {
+            const fileEl = document.getElementById('template-zip-file');
+            if (!fileEl.files || fileEl.files.length === 0) { alert('Please select a ZIP file'); return; }
+            const file = fileEl.files[0];
+            if (!file.name.toLowerCase().endsWith('.zip')) { alert('Only .zip files are allowed'); return; }
+            const form = new FormData();
+            form.append('file', file);
+            form.append('type', 'template');
+            const version = document.getElementById('template-version').value.trim();
+            if (version) form.append('version', version);
+
+            // Add optional uploadKey
+            const uploadKey = CaliusCMS.SettingsManager.get('security.uploadKey') || '';
+            if (uploadKey) form.append('uploadKey', uploadKey);
+
+            const progress = document.getElementById('upload-progress');
+            progress.style.display = 'block'; progress.innerText = 'Uploading...';
+
+            const headers = {};
+            if (window.CaliusCMS && window.CaliusCMS.auth && window.CaliusCMS.auth.csrfToken) headers['X-CSRF-Token'] = window.CaliusCMS.auth.csrfToken;
+
+            try {
+                const resp = await fetch('/admin/upload-handler.php', { method: 'POST', body: form, headers });
+                const json = await resp.json();
+                if (!resp.ok || !json.success) { alert('Upload failed: ' + (json.message || resp.statusText)); progress.style.display='none'; return; }
+                progress.innerText = 'Upload succeeded';
+                closeUploadModal();
+                loadArtifacts();
+                CaliusCMS.showNotification('Template uploaded successfully', 'success');
+            } catch (err) { console.error(err); alert('Upload error'); progress.style.display='none'; }
+        }
         
         // Delete template
         async function deleteTemplate(templateId) {
@@ -521,6 +620,9 @@
                 addBtn.classList.add('btn-disabled');
             }
             loadTemplates();
+            // load uploaded artifacts and open upload modal if requested by hash
+            if (typeof loadArtifacts === 'function') loadArtifacts();
+            if (location.hash === '#upload') showUploadTemplateModal();
         });
     </script>
     

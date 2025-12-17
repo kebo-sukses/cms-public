@@ -271,7 +271,27 @@ if (!is_dir($config['path'])) {
     }
 }
 
-// Move uploaded file
+// Special handling for template artifacts: move into non-web artifacts dir and write metadata
+if ($uploadType === 'template') {
+    // Use helper to save artifact (moves file, computes checksum, writes metadata)
+    $uploader = $_SESSION['calius_user']['username'] ?? ($_SESSION['calius_admin'] ? 'admin' : null);
+    $artifact = save_template_artifact($file['tmp_name'], $file['name'], $uploader);
+    if (!$artifact) {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Failed to save artifact']);
+        exit;
+    }
+
+    http_response_code(200);
+    echo json_encode([
+        'success' => true,
+        'message' => 'Template uploaded successfully',
+        'artifact' => $artifact
+    ]);
+    exit;
+}
+
+// Move uploaded file for other types
 if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
     http_response_code(500);
     echo json_encode([
