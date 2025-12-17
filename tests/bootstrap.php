@@ -6,6 +6,9 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
 } else {
     // Provide lightweight PHPUnit stubs for static analysis environments
     require_once __DIR__ . '/phpunit_stubs.php';
+}
+
+// Load auth helpers used in tests
 require_once __DIR__ . '/../admin/api/_auth.php';
 
 // ensure session available

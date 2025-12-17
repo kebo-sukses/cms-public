@@ -86,7 +86,7 @@ Via cPanel File Manager:
 ## 🐛 Troubleshooting
 
 ### Masalah: "Index of /"
-**Solusi:** File ada di subfolder `public/`. Pindahkan ke `public_html/`
+**Solusi:** File ada di subfolder `cms-public/`. Pindahkan ke `public_html/`
 
 ### Masalah: 403 Forbidden
 **Solusi:** 
@@ -150,12 +150,26 @@ Untuk keamanan, tambahkan `uploadKey` di `data/settings.json` pada bagian `secur
 
 Jika `uploadKey` di-set, unggahan harus menyertakan field `uploadKey` (form field) atau header `X-Upload-Key` dengan nilai yang cocok. Ini menambahkan lapisan proteksi di atas pemeriksaan `Referer`.
 
+### Template uploads and artifact storage
+
+Uploaded template ZIPs (type `template`) are stored in a non-web directory `data/artifacts/templates/`. After upload the system computes a SHA-256 checksum and records metadata in `data/templates_artifacts.json`. Admins can download stored artifacts via the admin UI (Templates → Uploaded Template Artifacts) or using the secure endpoint `/admin/api/template-artifact-download.php?id=<artifact_id>`.
+
 ### Upload quotas & virus scanning
 
 You can configure per-admin upload quotas and an optional virus scanner tool in `data/settings.json`:
 
 Branding and logo:
 - Upload your logo via the admin **Settings → Logo & Branding** section (or upload manually via cPanel to `/assets/images/`).
+- You can run the provided PowerShell helper locally to copy your logo and optionally generate a multi-resolution `.ico` file:
+
+```powershell
+# copies logo and creates a PNG favicon fallback
+.\scripts\copy-logo.ps1
+
+# copies logo and generates favicon.ico (requires ImageMagick in PATH)
+.\scripts\copy-logo.ps1 -GenerateIco
+```
+
 - After uploading or setting the `Logo URL`, use the **Extract Color from Logo** button to auto-detect a suitable brand color. This will set the site `brandColor` in `data/settings.json` and apply the color across the admin UI.
 
 

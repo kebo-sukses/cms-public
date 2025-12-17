@@ -17,7 +17,7 @@ require_auth();
 
 // CSRF protection
 require_csrf();
-$currentUser = get_current_user();
+$currentUser = calius_get_current_user();
 
 try {
     save_json_file($file, $data, $currentUser);

@@ -1,0 +1,9 @@
+
+
+# Ignore vscode AI rules
+.github\instructions\codacy.instructions.md
+
+# Asset upload folders (do not commit user uploads)
+assets/images/uploads/
+assets/media/
+data/artifacts/
