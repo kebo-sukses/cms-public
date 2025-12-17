@@ -88,10 +88,12 @@
     });
 
     // Mobile menu toggle
+    const mobileOverlay = document.querySelector('.mobile-overlay');
     mobileToggle?.addEventListener('click', function() {
       navMenu?.classList.toggle('active');
       this.classList.toggle('active');
       document.body.classList.toggle('menu-open');
+      mobileOverlay?.classList.toggle('active');
     });
 
     // Close mobile menu on link click
@@ -100,7 +102,16 @@
         navMenu?.classList.remove('active');
         mobileToggle?.classList.remove('active');
         document.body.classList.remove('menu-open');
+        mobileOverlay?.classList.remove('active');
       });
+    });
+
+    // Close mobile menu when tapping overlay
+    mobileOverlay?.addEventListener('click', function() {
+      navMenu?.classList.remove('active');
+      mobileToggle?.classList.remove('active');
+      document.body.classList.remove('menu-open');
+      this.classList.remove('active');
     });
 
     // Active link highlighting

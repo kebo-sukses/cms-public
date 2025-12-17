@@ -1,0 +1,45 @@
+name: Auto-generate favicon
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'assets/images/logo1.png'
+      - 'assets/images/logo1.jpg'
+      - 'assets/images/logo1.jpeg'
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: generate-favicon
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+
+      - name: Run favicon generator (PowerShell)
+        shell: pwsh
+        run: |
+          Write-Host "Running generator for assets/images/logo1.png"
+          ./scripts/generate-favicon.ps1 -SourcePath 'assets/images/logo1.png' -OutputDir 'assets/images'
+
+      - name: Show generated files
+        run: |
+          ls -lah assets/images | sed -n '1,200p'
+
+      - name: Commit generated favicon
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/favicon.ico assets/images/favicon.png || true
+          git commit -m "chore: auto-generate favicon from logo1.png [skip ci]" || echo "no changes to commit"
+          git push
