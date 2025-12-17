@@ -20,7 +20,7 @@ function json_fail($msg, $code = 400) {
     exit;
 }
 
-function get_current_user() {
+function calius_get_current_user() {
     if (empty($_SESSION['calius_admin'])) return null;
     $usersPath = __DIR__ . '/../../data/users.json';
     if (!file_exists($usersPath)) return null;

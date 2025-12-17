@@ -6,7 +6,7 @@ echo "Running auth helper tests...\n";
 // Simulate session
 $_SESSION = ['calius_admin' => true, 'calius_user' => ['username' => 'admin', 'id' => 'user-001']];
 
-$user = get_current_user();
+$user = calius_get_current_user();
 if ($user && isset($user['username'])) {
     echo "get_current_user: PASS ({$user['username']})\n";
 } else {

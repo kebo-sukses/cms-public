@@ -9,7 +9,7 @@ if (empty($_SESSION['calius_admin'])) {
     exit;
 }
 
-$user = get_current_user();
+$user = calius_get_current_user();
 if (!$user) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'User not found']);
