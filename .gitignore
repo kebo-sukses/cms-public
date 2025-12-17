@@ -7,3 +7,8 @@
 assets/images/uploads/
 assets/media/
 data/artifacts/
+
+# PHP dependencies and build artifacts
+vendor/
+composer.lock
+.phpunit.result.cache
