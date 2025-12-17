@@ -117,7 +117,9 @@
     "requireStrongPassword": true,
     "uploadKey": "CHANGE_ME_UPLOAD_KEY",
     "uploadQuotaPerDay": 100,
-    "virusScannerCmd": ""  
+    "virusScannerCmd": "",
+    "artifactRetentionDays": 30,
+    "maxArtifactVersionsPerTemplate": 10
   },
   "maintenance": {
     "enabled": false,
