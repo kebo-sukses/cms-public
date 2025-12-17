@@ -266,6 +266,7 @@
         // Delegate authentication to server
         const resp = await fetch('/admin/api/login.php', {
           method: 'POST',
+          credentials: 'same-origin',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username, password, totp: totpToken })
         });
@@ -288,7 +289,7 @@
         SessionManager.createSession({ id: 'user-001', username: username, email: username, role: 'admin' });
         // Fetch current user / permissions from server
         try {
-          const who = await fetch('/admin/api/whoami.php');
+          const who = await fetch('/admin/api/whoami.php', { credentials: 'same-origin' });
           const whoJson = await who.json();
           if (who.ok && whoJson.success && whoJson.user) {
             authState.currentUser = whoJson.user;
@@ -313,6 +314,7 @@
     static async completePasswordReset(token, newPassword) {
       const resp = await fetch('/admin/api/complete-password-reset.php', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, newPassword })
       });

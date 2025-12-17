@@ -150,6 +150,26 @@ Untuk keamanan, tambahkan `uploadKey` di `data/settings.json` pada bagian `secur
 
 Jika `uploadKey` di-set, unggahan harus menyertakan field `uploadKey` (form field) atau header `X-Upload-Key` dengan nilai yang cocok. Ini menambahkan lapisan proteksi di atas pemeriksaan `Referer`.
 
+Auto-deploy to cPanel (GitHub Actions)
+
+You can configure automatic deployment from GitHub to cPanel on every push to `main`. Steps:
+
+1. Create an SSH key pair (on your workstation):
+   - ssh-keygen -t ed25519 -f deploy_key -C "deploy@calius" -N ""
+2. Add the *public* key (deploy_key.pub) to your cPanel Authorized Keys (or ~/.ssh/authorized_keys).
+3. In the GitHub repo, add the following repository **Secrets**:
+   - `DEPLOY_SSH_KEY` (private key contents from `deploy_key`)
+   - `DEPLOY_USER` (SFTP/SSH user, e.g. `user`)
+   - `DEPLOY_HOST` (hostname or IP, e.g. `example.com`)
+   - `DEPLOY_PATH` (destination folder on server, e.g. `/home/user/public_html`)
+4. The repository contains a workflow file `.github/workflows/deploy-to-cpanel.yml` that will run on push to `main` (or can be triggered manually). The action will rsync files (excluding `.git`, `data/`, `tests/`) into a temporary folder and then atomically swap them into place with a backup.
+
+Notes & Safety:
+- Test by pushing to a temporary branch and running the workflow manually via GitHub UI.
+- The workflow will keep a timestamped backup of previous `site` folder at `DEST_PATH/backups/`.
+- Do NOT commit private keys to the repository; use GitHub Secrets only.
+
+
 ### Template uploads and artifact storage
 
 Uploaded template ZIPs (type `template`) are stored in a non-web directory `data/artifacts/templates/`. After upload the system computes a SHA-256 checksum and records metadata in `data/templates_artifacts.json`. Admins can download stored artifacts via the admin UI (Templates → Uploaded Template Artifacts) or using the secure endpoint `/admin/api/template-artifact-download.php?id=<artifact_id>`.

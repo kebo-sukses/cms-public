@@ -364,6 +364,7 @@
                         <h3 class="admin-card-title">Security Settings</h3>
                     </div>
                     <div class="admin-card-body">
+                        <div id="uploadkey-warning" style="display:none; margin-bottom:1rem;"></div>
                         <h4 style="margin-bottom: 1rem;">Change Admin Password</h4>
                         
                         <div class="admin-form-group">
@@ -961,13 +962,19 @@
 
                 const resp = await fetch('/admin/upload-handler.php', {
                     method: 'POST',
-                    body: form
+                    body: form,
+                    credentials: 'same-origin'
                 });
 
                 const result = await resp.json();
                 uploadingModal.remove();
 
                 if (!resp.ok || !result.success) {
+                    // If server complained about upload key, show helpful modal
+                    if (result && result.message && result.message.toLowerCase().includes('upload key')) {
+                        showUploadKeyErrorModal(result.message);
+                        return;
+                    }
                     alert('Upload failed: ' + (result.message || resp.statusText));
                     // fallback to manual instructions
                     showLogoUploadInstructions(file.name, dataUrl);
@@ -988,6 +995,39 @@
                 alert('Auto upload failed. See console for details.');
                 showLogoUploadInstructions(file.name, dataUrl);
             }
+        }
+
+        function showUploadKeyErrorModal(message) {
+            const modal = document.createElement('div');
+            modal.className = 'admin-modal-overlay active';
+            modal.innerHTML = `
+                <div class="admin-modal" style="max-width:600px;">
+                    <div class="admin-modal-header">
+                        <h3 class="admin-modal-title">Upload failed</h3>
+                        <button class="admin-modal-close" onclick="this.closest('.admin-modal-overlay').remove()">×</button>
+                    </div>
+                    <div class="admin-modal-body">
+                        <div class="admin-alert error">
+                            <div class="admin-alert-icon">⚠️</div>
+                            <div class="admin-alert-content">
+                                <div class="admin-alert-title">Upload key missing or invalid</div>
+                                <p>${message}</p>
+                                <p style="margin-top:0.5rem;">This usually means your server requires a secret upload key for unauthenticated uploads, or your admin session has expired. You can either:</p>
+                                <ul>
+                                    <li>Open <strong>Settings → Security</strong> and ensure the upload key is set or visible to you.</li>
+                                    <li>Re-login to refresh your admin session (if your session expired).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.admin-modal-overlay').remove()">Close</button>
+                        <button class="btn btn-primary" onclick="(function(){ window.location.href='/admin/settings.html'; })()">Open Settings</button>
+                        <button class="btn" onclick="(function(){ window.location.href='/admin/login.html'; })()">Re-login</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
 
         // Extract brand color from a logo URL and set the color input
@@ -1090,24 +1130,17 @@
                             document.documentElement.style.setProperty('--primary-color', site.brandColor);
                         }
                     }
-                } catch (e) {
-                    console.warn('Could not load settings for populate', e);
-                }
-            })();
 
-            // wire up extract button
-            const extractBtn = document.getElementById('extract-brand-btn');
-                if (extractBtn) {
-                extractBtn.addEventListener('click', async function() {
-                    const url = document.getElementById('logo-url').value;
+                    // Show uploadKey warning if still the placeholder
                     try {
-                        await extractBrandColor(url);
-                        CaliusCMS.showNotification('Brand color extracted', 'success');
-                    } catch (err) {
-                        alert('Failed to extract color: ' + err.message);
-                    }
-                });
-                // keyboard activation (Enter/Space)
+                        const uploadKey = s?.security?.uploadKey || '';
+                        const placeholder = 'CHANGE_ME_UPLOAD_KEY';
+                        const warnEl = document.getElementById('uploadkey-warning');
+                        if (warnEl && (uploadKey === placeholder || uploadKey === '')) {
+                            warnEl.innerHTML = `\n                                <div class="admin-alert warning">\n                                    <div class="admin-alert-icon">⚠️</div>\n                                    <div class="admin-alert-content">\n                                        <div class="admin-alert-title">Upload key is not configured</div>\n                                        <p>The upload key is currently the default placeholder (<code>CHANGE_ME_UPLOAD_KEY</code>). Template and auto-uploads require a proper upload key to succeed. Update <code>/data/settings.json</code> via cPanel or use the Save Settings instructions to set a strong key.</p>\n                                    </div>\n                                </div>\n                            `;
+                            warnEl.style.display = 'block';
+                        }
+                    } catch (e) { /* ignore */ }
                 extractBtn.addEventListener('keydown', async function(e) {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();

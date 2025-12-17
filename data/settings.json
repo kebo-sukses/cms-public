@@ -121,6 +121,15 @@
     "artifactRetentionDays": 30,
     "maxArtifactVersionsPerTemplate": 10
   },
+  "artifactDelivery": {
+    "enabled": false,
+    "method": "github_release",
+    "repo": "owner/repo",
+    "tokenEnvVar": "GITHUB_ARTIFACT_TOKEN",
+    "tagFormat": "templates-{timestamp}",
+    "releaseNameFormat": "Templates - {timestamp}",
+    "dryRun": true
+  },
   "maintenance": {
     "enabled": false,
     "message": {

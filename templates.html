@@ -16,8 +16,11 @@
     <meta property="og:description" content="Browse our collection of premium high-speed website templates.">
     <meta property="og:image" content="https://calius.digital/assets/images/og-image.jpg">
     
-    <!-- Favicon -->
+    <!-- Favicon (use PNG logo1.png and fallback favicon.png) -->
+    <link rel="icon" type="image/png" href="/assets/images/logo1.png">
+    <link rel="icon" type="image/png" href="/assets/images/favicon.png">
     <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/assets/images/logo1.png">
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/assets/css/main.css">
@@ -111,7 +114,7 @@
         }
         
         .template-title {
-            font-size: 1.25rem;
+            font-size: clamp(1.0rem, 2.5vw, 1.25rem);
             font-weight: 700;
             margin-bottom: var(--spacing-sm);
             color: var(--text-primary);
@@ -119,12 +122,22 @@
         
         .template-description {
             color: var(--text-secondary);
-            font-size: 0.875rem;
+            font-size: clamp(0.85rem, 2.2vw, 0.95rem);
             margin-bottom: var(--spacing-md);
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        /* Slightly tighter card padding for compact layouts */
+        .template-content { padding: clamp(0.6rem, 1.2vw, 1rem); }
+
+        /* Larger spacing on desktop for readability */
+        @media (min-width: 1024px) {
+          .template-title { font-size: 1.35rem; }
+          .template-description { font-size: 0.95rem; -webkit-line-clamp: 3; }
+          .template-image { height: 300px; }
         }
         
         .template-meta {
@@ -210,8 +223,9 @@
     <!-- Header / Navigation -->
     <header class="header">
         <div class="container header-container">
-            <a href="/" class="logo">
-                <span>Calius Digital</span>
+            <a href="/" class="logo" aria-label="Calius Digital home">
+                <img src="/assets/images/logo1.png" alt="Calius Digital" class="site-logo" onerror="this.style.display='none'">
+                <span class="logo-text">Calius Digital</span>
             </a>
             
             <nav class="nav">
@@ -232,6 +246,8 @@
             </nav>
         </div>
     </header>
+
+    <div class="mobile-overlay" aria-hidden="true"></div>
 
     <!-- Templates Header -->
     <section class="templates-header">

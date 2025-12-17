@@ -50,11 +50,14 @@ function check_upload_quota($userId) {
  * Save uploaded template artifact to a non-web directory, compute checksum,
  * write metadata entry and audit log. Returns metadata on success or false.
  */
-function save_template_artifact($tmpPath, $originalName, $uploader = null) {
+function save_template_artifact($tmpPath, $originalName, $uploader = null, $version = null) {
     $artifactsDir = __DIR__ . '/../data/artifacts/templates/';
     if (!is_dir($artifactsDir)) {
         if (!mkdir($artifactsDir, 0755, true)) return false;
     }
+
+    // ensure directory is writable
+    if (!is_writable($artifactsDir)) return false;
 
     $origBase = pathinfo($originalName, PATHINFO_FILENAME);
     $san = preg_replace('/[^a-zA-Z0-9-_]/', '-', $origBase);
@@ -82,6 +85,7 @@ function save_template_artifact($tmpPath, $originalName, $uploader = null) {
         'id' => $id,
         'filename' => $filename,
         'original_name' => $originalName,
+        'version' => $version,
         'checksum' => $checksum,
         'size' => $size,
         'uploaded_by' => $uploader,
@@ -96,6 +100,33 @@ function save_template_artifact($tmpPath, $originalName, $uploader = null) {
     // Write audit entry if helper exists
     if (function_exists('write_audit_entry')) {
         write_audit_entry(['user' => $uploader, 'file' => 'templates_artifacts', 'action' => 'upload', 'summary' => $entry['original_name']]);
+    }
+
+    // Attempt automatic delivery (non-blocking: do not fail the upload if delivery fails)
+    try {
+        $settings = json_decode(@file_get_contents(__DIR__ . '/../data/settings.json'), true) ?: [];
+        $delivery = $settings['artifactDelivery'] ?? [];
+        if (!empty($delivery['enabled']) && ($delivery['method'] ?? '') === 'github_release') {
+            if (file_exists(__DIR__ . '/github_helper.php')) {
+                require_once __DIR__ . '/github_helper.php';
+                $res = deliver_artifact_to_github($dest, $filename, $entry);
+                if (!empty($res['ok'])) {
+                    $entry['delivered'] = true;
+                    $entry['deliver_info'] = $res;
+                } else {
+                    $entry['delivered'] = false;
+                    $entry['deliver_info'] = $res;
+                    if (function_exists('write_audit_entry')) write_audit_entry(['event' => 'artifact_delivery_failed', 'file' => $filename, 'detail' => $res]);
+                }
+                // update meta file with delivery status
+                foreach ($meta as &$m) {
+                    if ($m['id'] === $id) { $m = $entry; break; }
+                }
+                @file_put_contents($metaPath, json_encode($meta, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            }
+        }
+    } catch (Exception $e) {
+        if (function_exists('write_audit_entry')) write_audit_entry(['event' => 'artifact_delivery_exception', 'file' => $filename, 'detail' => $e->getMessage()]);
     }
 
     return $entry;
