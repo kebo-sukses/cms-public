@@ -29,17 +29,29 @@ jobs:
       - name: Download CodeQL CLI bundle (specific version with retries)
         run: |
           CODEQL_VERSION="v2.23.8"
-          URL="https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_VERSION}/codeql-bundle-linux64.tar.gz"
+          URL="https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_VERSION}/codeql-linux64.zip"
           echo "Downloading CodeQL CLI bundle from $URL"
           n=0
           until [ "$n" -ge 3 ]; do
-            curl -sSL "$URL" -o codeql.tar.gz && break
+            curl -sSL "$URL" -o codeql.zip && break
             n=$((n+1))
             echo "Retry $n/3..."
             sleep 2
           done
-          file codeql.tar.gz || true
-          tar -xzf codeql.tar.gz || (echo "tar failed; dumping first 200 bytes for debug" && head -c 200 codeql.tar.gz | xxd)
+          file codeql.zip || true
+          # Attempt to unzip; if unzip not available, use python fallback
+          if command -v unzip >/dev/null 2>&1; then
+            unzip -q codeql.zip || (echo "unzip failed; dumping first 200 bytes" && head -c 200 codeql.zip | xxd)
+          else
+            python - <<'PY'
+import zipfile, sys
+try:
+  with zipfile.ZipFile('codeql.zip') as z:
+    z.extractall()
+except Exception as e:
+  sys.exit(0)
+PY
+          fi
           echo "$(pwd)/codeql" >> $GITHUB_PATH
 
       - name: Ensure PHP CodeQL packs are installed (fallback)
