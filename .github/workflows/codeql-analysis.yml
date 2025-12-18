@@ -26,19 +26,27 @@ jobs:
           php-version: '8.0'
           tools: composer
 
-      - name: Download CodeQL CLI bundle (specific version with retries)
+      - name: Download CodeQL CLI bundle (specific version with robust checks)
         run: |
           CODEQL_VERSION="v2.23.8"
           URL="https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_VERSION}/codeql-linux64.zip"
           echo "Downloading CodeQL CLI bundle from $URL"
           n=0
           until [ "$n" -ge 3 ]; do
-            curl -sSL "$URL" -o codeql.zip && break
+            http_status=$(curl -sSL -w "%{http_code}" -D headers.txt -o codeql.zip "$URL" || echo 000)
+            echo "Download HTTP status: $http_status"
+            if [ "$http_status" = "200" ] && [ -s codeql.zip ]; then
+              echo "download successful"
+              break
+            fi
             n=$((n+1))
             echo "Retry $n/3..."
             sleep 2
           done
-          file codeql.zip || true
+          echo "file info:"; file codeql.zip || true
+          if [ ! -s codeql.zip ]; then
+            echo "Download failed or produced empty file. Dumping headers and first bytes for debug:"; cat headers.txt || true; head -c 200 codeql.zip | xxd || true
+          fi
           # Attempt to unzip; if unzip not available, use python fallback
           if command -v unzip >/dev/null 2>&1; then
             unzip -q codeql.zip || (echo "unzip failed; dumping first 200 bytes" && head -c 200 codeql.zip | xxd)
@@ -49,6 +57,7 @@ try:
   with zipfile.ZipFile('codeql.zip') as z:
     z.extractall()
 except Exception as e:
+  print('python unzip failed:', e)
   sys.exit(0)
 PY
           fi
@@ -61,13 +70,27 @@ PY
             ls -la codeql >> codeql-extract-listing.txt || true
             echo "CodeQL CLI version (if available):" >> codeql-extract-listing.txt
             ./codeql/codeql --version >> codeql-extract-listing.txt 2>&1 || true
-            ./codeql/codeql pack list > codeql-packs.txt 2>&1 || true
-            head -n 200 codeql-packs.txt >> codeql-extract-listing.txt || true
+            echo "Installed packs (before):" >> codeql-extract-listing.txt
+            ./codeql/codeql pack list >> codeql-extract-listing.txt 2>&1 || true
+            echo "Resolving languages (before pack install):" >> codeql-extract-listing.txt
             ./codeql/codeql resolve languages --format=json > codeql-langs.json 2>/dev/null || true
             head -n 200 codeql-langs.json >> codeql-extract-listing.txt || true
+            # Try installing PHP pack if not present
+            if ! grep -q 'codeql/php-all' codeql-extract-listing.txt 2>/dev/null; then
+              echo "PHP pack not present, attempting pack install..." >> codeql-extract-listing.txt
+              ./codeql/codeql pack install codeql/php-all@latest || ./codeql/codeql pack install codeql/php-all@latest --no-verify || true
+              echo "Installed packs (after):" >> codeql-extract-listing.txt
+              ./codeql/codeql pack list >> codeql-extract-listing.txt 2>&1 || true
+              echo "Resolving languages (after pack install):" >> codeql-extract-listing.txt
+              ./codeql/codeql resolve languages --format=json > codeql-langs.json 2>/dev/null || true
+              head -n 200 codeql-langs.json >> codeql-extract-listing.txt || true
+            fi
+            # Deeper test: attempt to create a PHP database (non-fatal)
+            echo "Attempting test PHP database create (non-fatal)" >> codeql-extract-listing.txt
+            ./codeql/codeql database create codeql-db-php --language=php --source-root=. --no-build >> codeql-extract-listing.txt 2>&1 || true
           else
-            echo "codeql directory not found after unzip"
-            ls -la > codeql-extract-listing.txt || true
+            echo "codeql directory not found after unzip" > codeql-extract-listing.txt
+            ls -la >> codeql-extract-listing.txt || true
           fi
           echo "$(pwd)/codeql" >> $GITHUB_PATH
 
