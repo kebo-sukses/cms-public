@@ -52,6 +52,27 @@ jobs:
             echo "codeql CLI not found; will rely on action's init to install packs"
           fi
 
+      - name: Diagnose CodeQL language availability (non-fatal)
+        continue-on-error: true
+        run: |
+          echo "--- Diagnosing CodeQL languages ---"
+          if [ -x "./codeql/codeql" ]; then
+            echo "CodeQL CLI found at ./codeql/codeql"
+            set +e
+            ./codeql/codeql resolve languages --format=json > codeql-langs.json 2>/dev/null || true
+            echo "Contents of codeql-langs.json (trimmed):"
+            head -n 200 codeql-langs.json || true
+            if grep -q '"php"' codeql-langs.json 2>/dev/null; then
+              echo "php extractor is present in resolved languages"
+            else
+              echo "php extractor NOT present — attempting a test database create (non-fatal)"
+              ./codeql/codeql database create codeql-db-php --language=php --source-root=. || true
+            fi
+            set -e
+          else
+            echo "CodeQL CLI not found; cannot diagnose. Will rely on action's init step."
+          fi
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
