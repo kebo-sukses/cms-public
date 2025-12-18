@@ -1,0 +1,390 @@
+{
+  "templates": [
+    {
+      "id": "tpl-001",
+      "name": {
+        "en": "Corporate Pro Business",
+        "id": "Bisnis Korporat Pro"
+      },
+      "slug": "corporate-pro-business",
+      "category": "business",
+      "price": 49,
+      "salePrice": null,
+      "currency": "USD",
+      "description": {
+        "en": "Professional corporate business template with modern design. Perfect for agencies, consulting firms, and corporate websites. Features include: responsive design, fast loading, SEO optimized, contact forms, and more.",
+        "id": "Template bisnis korporat profesional dengan desain modern. Sempurna untuk agensi, firma konsultan, dan website korporat. Fitur termasuk: desain responsif, loading cepat, SEO optimal, form kontak, dan lainnya."
+      },
+      "features": {
+        "en": [
+          "Fully Responsive Design",
+          "Lightning Fast Loading (95+ PageSpeed Score)",
+          "SEO Optimized",
+          "Cross-browser Compatible",
+          "Easy Customization",
+          "Contact Form Integration",
+          "Google Maps Integration",
+          "Social Media Integration",
+          "Documentation Included",
+          "Lifetime Updates"
+        ],
+        "id": [
+          "Desain Fully Responsive",
+          "Loading Super Cepat (Skor PageSpeed 95+)",
+          "SEO Optimal",
+          "Kompatibel Semua Browser",
+          "Mudah Dikustomisasi",
+          "Integrasi Form Kontak",
+          "Integrasi Google Maps",
+          "Integrasi Media Sosial",
+          "Dokumentasi Lengkap",
+          "Update Selamanya"
+        ]
+      },
+      "technologies": ["HTML5", "CSS3", "JavaScript", "Bootstrap 5"],
+      "pages": 12,
+      "demoUrl": "https://demo.calius.digital/corporate-pro",
+      "previewImage": "/assets/images/templates/corporate-pro-preview.jpg",
+      "images": [
+        "/assets/images/templates/corporate-pro-1.jpg",
+        "/assets/images/templates/corporate-pro-2.jpg",
+        "/assets/images/templates/corporate-pro-3.jpg"
+      ],
+      "downloadUrl": "/templates/business/corporate-pro.zip",
+      "fileSize": "5.2 MB",
+      "version": "1.0.0",
+      "lastUpdated": "2024-01-01",
+      "downloads": 0,
+      "rating": 5.0,
+      "reviews": 0,
+      "tags": ["business", "corporate", "professional", "agency", "consulting"],
+      "status": "active",
+      "featured": true,
+      "bestseller": false,
+      "new": true
+    },
+    {
+      "id": "tpl-002",
+      "name": {
+        "en": "ShopMax E-commerce",
+        "id": "ShopMax E-commerce"
+      },
+      "slug": "shopmax-ecommerce",
+      "category": "ecommerce",
+      "price": 79,
+      "salePrice": 59,
+      "currency": "USD",
+      "description": {
+        "en": "Complete e-commerce solution with shopping cart, product catalog, and checkout system. Optimized for high-speed performance and conversions. Perfect for online stores of any size.",
+        "id": "Solusi e-commerce lengkap dengan keranjang belanja, katalog produk, dan sistem checkout. Dioptimalkan untuk performa kecepatan tinggi dan konversi. Sempurna untuk toko online berbagai ukuran."
+      },
+      "features": {
+        "en": [
+          "Product Catalog System",
+          "Shopping Cart Functionality",
+          "Secure Checkout Process",
+          "Payment Gateway Integration",
+          "Inventory Management",
+          "Order Tracking",
+          "Customer Reviews",
+          "Wishlist Feature",
+          "Mobile-First Design",
+          "Lightning Fast Performance"
+        ],
+        "id": [
+          "Sistem Katalog Produk",
+          "Fungsi Keranjang Belanja",
+          "Proses Checkout Aman",
+          "Integrasi Payment Gateway",
+          "Manajemen Inventori",
+          "Pelacakan Pesanan",
+          "Review Pelanggan",
+          "Fitur Wishlist",
+          "Desain Mobile-First",
+          "Performa Super Cepat"
+        ]
+      },
+      "technologies": ["HTML5", "CSS3", "JavaScript", "Vue.js"],
+      "pages": 18,
+      "demoUrl": "https://demo.calius.digital/shopmax",
+      "previewImage": "/assets/images/templates/shopmax-preview.jpg",
+      "images": [
+        "/assets/images/templates/shopmax-1.jpg",
+        "/assets/images/templates/shopmax-2.jpg",
+        "/assets/images/templates/shopmax-3.jpg"
+      ],
+      "downloadUrl": "/templates/ecommerce/shopmax.zip",
+      "fileSize": "8.5 MB",
+      "version": "1.2.0",
+      "lastUpdated": "2024-01-01",
+      "downloads": 0,
+      "rating": 4.9,
+      "reviews": 0,
+      "tags": ["ecommerce", "shop", "store", "online-store", "shopping"],
+      "status": "active",
+      "featured": true,
+      "bestseller": true,
+      "new": false
+    },
+    {
+      "id": "tpl-003",
+      "name": {
+        "en": "Creative Portfolio Pro",
+        "id": "Portfolio Kreatif Pro"
+      },
+      "slug": "creative-portfolio-pro",
+      "category": "portfolio",
+      "price": 39,
+      "salePrice": null,
+      "currency": "USD",
+      "description": {
+        "en": "Stunning portfolio template for creatives, designers, photographers, and artists. Showcase your work with style and speed. Includes gallery, project pages, and contact forms.",
+        "id": "Template portfolio menakjubkan untuk kreatif, desainer, fotografer, dan seniman. Tampilkan karya Anda dengan gaya dan kecepatan. Termasuk galeri, halaman proyek, dan form kontak."
+      },
+      "features": {
+        "en": [
+          "Beautiful Gallery Layouts",
+          "Project Showcase Pages",
+          "Smooth Animations",
+          "Lightbox Integration",
+          "Filterable Portfolio",
+          "About Me Section",
+          "Skills & Services",
+          "Testimonials",
+          "Blog Integration",
+          "Contact Form"
+        ],
+        "id": [
+          "Layout Galeri Indah",
+          "Halaman Showcase Proyek",
+          "Animasi Smooth",
+          "Integrasi Lightbox",
+          "Portfolio Dapat Difilter",
+          "Bagian Tentang Saya",
+          "Keahlian & Layanan",
+          "Testimoni",
+          "Integrasi Blog",
+          "Form Kontak"
+        ]
+      },
+      "technologies": ["HTML5", "CSS3", "JavaScript", "GSAP"],
+      "pages": 8,
+      "demoUrl": "https://demo.calius.digital/creative-portfolio",
+      "previewImage": "/assets/images/templates/portfolio-preview.jpg",
+      "images": [
+        "/assets/images/templates/portfolio-1.jpg",
+        "/assets/images/templates/portfolio-2.jpg",
+        "/assets/images/templates/portfolio-3.jpg"
+      ],
+      "downloadUrl": "/templates/portfolio/creative-portfolio.zip",
+      "fileSize": "4.8 MB",
+      "version": "1.1.0",
+      "lastUpdated": "2024-01-01",
+      "downloads": 0,
+      "rating": 5.0,
+      "reviews": 0,
+      "tags": ["portfolio", "creative", "designer", "photographer", "artist"],
+      "status": "active",
+      "featured": true,
+      "bestseller": false,
+      "new": true
+    },
+    {
+      "id": "tpl-004",
+      "name": {
+        "en": "LaunchPad Landing Page",
+        "id": "LaunchPad Landing Page"
+      },
+      "slug": "launchpad-landing-page",
+      "category": "landing-page",
+      "price": 29,
+      "salePrice": 19,
+      "currency": "USD",
+      "description": {
+        "en": "High-converting landing page template perfect for product launches, apps, SaaS, and marketing campaigns. Optimized for speed and conversions with built-in lead capture forms.",
+        "id": "Template landing page dengan konversi tinggi sempurna untuk peluncuran produk, aplikasi, SaaS, dan kampanye marketing. Dioptimalkan untuk kecepatan dan konversi dengan form capture lead built-in."
+      },
+      "features": {
+        "en": [
+          "Conversion Optimized Design",
+          "Lead Capture Forms",
+          "Email Integration",
+          "Countdown Timer",
+          "Pricing Tables",
+          "Feature Highlights",
+          "Video Integration",
+          "Social Proof Section",
+          "Call-to-Action Buttons",
+          "Analytics Ready"
+        ],
+        "id": [
+          "Desain Optimal Konversi",
+          "Form Capture Lead",
+          "Integrasi Email",
+          "Timer Countdown",
+          "Tabel Harga",
+          "Highlight Fitur",
+          "Integrasi Video",
+          "Bagian Social Proof",
+          "Tombol Call-to-Action",
+          "Siap Analytics"
+        ]
+      },
+      "technologies": ["HTML5", "CSS3", "JavaScript", "Tailwind CSS"],
+      "pages": 1,
+      "demoUrl": "https://demo.calius.digital/launchpad",
+      "previewImage": "/assets/images/templates/launchpad-preview.jpg",
+      "images": [
+        "/assets/images/templates/launchpad-1.jpg",
+        "/assets/images/templates/launchpad-2.jpg"
+      ],
+      "downloadUrl": "/templates/landing-page/launchpad.zip",
+      "fileSize": "2.1 MB",
+      "version": "1.0.0",
+      "lastUpdated": "2024-01-01",
+      "downloads": 0,
+      "rating": 4.8,
+      "reviews": 0,
+      "tags": ["landing-page", "conversion", "marketing", "saas", "product-launch"],
+      "status": "active",
+      "featured": false,
+      "bestseller": true,
+      "new": false
+    },
+    {
+      "id": "tpl-005",
+      "name": {
+        "en": "Delicious Restaurant",
+        "id": "Restoran Delicious"
+      },
+      "slug": "delicious-restaurant",
+      "category": "restaurant",
+      "price": 45,
+      "salePrice": null,
+      "currency": "USD",
+      "description": {
+        "en": "Mouth-watering restaurant template with online menu, reservation system, and gallery. Perfect for restaurants, cafes, bars, and food businesses. Mobile-optimized for on-the-go customers.",
+        "id": "Template restoran menggugah selera dengan menu online, sistem reservasi, dan galeri. Sempurna untuk restoran, kafe, bar, dan bisnis makanan. Dioptimalkan mobile untuk pelanggan yang mobile."
+      },
+      "features": {
+        "en": [
+          "Online Menu System",
+          "Table Reservation",
+          "Food Gallery",
+          "Chef Profiles",
+          "Special Offers Section",
+          "Customer Reviews",
+          "Location & Hours",
+          "Online Ordering Ready",
+          "Mobile Optimized",
+          "Fast Loading"
+        ],
+        "id": [
+          "Sistem Menu Online",
+          "Reservasi Meja",
+          "Galeri Makanan",
+          "Profil Chef",
+          "Bagian Penawaran Spesial",
+          "Review Pelanggan",
+          "Lokasi & Jam Buka",
+          "Siap Pemesanan Online",
+          "Optimal Mobile",
+          "Loading Cepat"
+        ]
+      },
+      "technologies": ["HTML5", "CSS3", "JavaScript", "Bootstrap 5"],
+      "pages": 10,
+      "demoUrl": "https://demo.calius.digital/delicious",
+      "previewImage": "/assets/images/templates/restaurant-preview.jpg",
+      "images": [
+        "/assets/images/templates/restaurant-1.jpg",
+        "/assets/images/templates/restaurant-2.jpg",
+        "/assets/images/templates/restaurant-3.jpg"
+      ],
+      "downloadUrl": "/templates/restaurant/delicious.zip",
+      "fileSize": "6.3 MB",
+      "version": "1.0.0",
+      "lastUpdated": "2024-01-01",
+      "downloads": 0,
+      "rating": 4.9,
+      "reviews": 0,
+      "tags": ["restaurant", "food", "cafe", "menu", "dining"],
+      "status": "active",
+      "featured": true,
+      "bestseller": false,
+      "new": true
+    }
+  ],
+  "categories": [
+    {
+      "id": "business",
+      "name": {
+        "en": "Business",
+        "id": "Bisnis"
+      },
+      "slug": "business",
+      "description": {
+        "en": "Professional business templates for corporate websites, agencies, and consulting firms",
+        "id": "Template bisnis profesional untuk website korporat, agensi, dan firma konsultan"
+      },
+      "icon": "briefcase",
+      "count": 1
+    },
+    {
+      "id": "ecommerce",
+      "name": {
+        "en": "E-commerce",
+        "id": "E-commerce"
+      },
+      "slug": "ecommerce",
+      "description": {
+        "en": "Complete e-commerce solutions for online stores and shops",
+        "id": "Solusi e-commerce lengkap untuk toko online dan shop"
+      },
+      "icon": "shopping-cart",
+      "count": 1
+    },
+    {
+      "id": "portfolio",
+      "name": {
+        "en": "Portfolio",
+        "id": "Portfolio"
+      },
+      "slug": "portfolio",
+      "description": {
+        "en": "Creative portfolio templates for designers, photographers, and artists",
+        "id": "Template portfolio kreatif untuk desainer, fotografer, dan seniman"
+      },
+      "icon": "image",
+      "count": 1
+    },
+    {
+      "id": "landing-page",
+      "name": {
+        "en": "Landing Page",
+        "id": "Landing Page"
+      },
+      "slug": "landing-page",
+      "description": {
+        "en": "High-converting landing pages for marketing campaigns and product launches",
+        "id": "Landing page konversi tinggi untuk kampanye marketing dan peluncuran produk"
+      },
+      "icon": "rocket",
+      "count": 1
+    },
+    {
+      "id": "restaurant",
+      "name": {
+        "en": "Restaurant",
+        "id": "Restoran"
+      },
+      "slug": "restaurant",
+      "description": {
+        "en": "Delicious templates for restaurants, cafes, and food businesses",
+        "id": "Template lezat untuk restoran, kafe, dan bisnis makanan"
+      },
+      "icon": "utensils",
+      "count": 1
+    }
+  ]
+}

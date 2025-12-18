@@ -1,0 +1,38 @@
+name: Prune Artifacts
+
+on:
+  schedule:
+    - cron: '0 3 * * 0' # weekly Sunday 03:00 UTC
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Apply deletions (default: false)'
+        required: false
+        default: 'false'
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run prune (dry-run by default)
+        env:
+          PRUNE_AUTOMATIC: ${{ secrets.PRUNE_AUTOMATIC }}
+        run: |
+          APPLY=${{ github.event.inputs.apply || 'false' }}
+          if [ "$PRUNE_AUTOMATIC" = 'true' ] || [ "$APPLY" = 'true' ]; then
+            echo "Applying prune (non-dry run)"
+            php scripts/prune-artifacts.php --days=0 --max=0 || true
+            # Note: script supports days/max; here 0 means use settings defaults
+            # commit changes if any (deleted files/metadata)
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/templates_artifacts.json || true
+            git commit -m "chore: apply artifact prune via workflow" || echo "no changes to commit"
+            git push origin HEAD:refs/heads/maintenance/prune-artifacts || echo "push failed"
+            # open PR
+            gh pr create --title "chore: prune artifacts" --body "Automated prune run" --base main --head maintenance/prune-artifacts || echo "PR exists or creation failed"
+          else
+            echo "Dry-run: no changes applied"
+            php scripts/prune-artifacts.php --dry-run || true
+          fi

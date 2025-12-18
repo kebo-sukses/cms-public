@@ -1,0 +1,31 @@
+{
+  "users": [
+    {
+      "id": "user-001",
+      "username": "admin",
+      "email": "admin@calius.digital",
+      "password": "83d9235fc88e176431f7b662461ad87590729794de076829cb4362507beb29ca",
+      "role": "admin",
+      "firstName": "Admin",
+      "lastName": "Calius",
+      "avatar": "/assets/images/avatars/admin.jpg",
+      "twoFactorEnabled": false,
+      "twoFactorSecret": "",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "lastLogin": null,
+      "loginAttempts": 0,
+      "lockedUntil": null,
+      "status": "active",
+      "permissions": [
+        "manage_templates",
+        "manage_blog",
+        "manage_orders",
+        "manage_users",
+        "manage_settings",
+        "view_analytics"
+      ]
+    }
+  ],
+  "sessions": [],
+  "loginHistory": []
+}

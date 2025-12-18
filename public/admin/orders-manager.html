@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Orders Manager - Calius Digital Admin</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+    
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-logo">Calius Admin</div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+            </div>
+            
+            <nav class="admin-nav">
+                <div class="admin-nav-section">
+                    <div class="admin-nav-title">Main</div>
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="/admin/index.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">📊</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/templates-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">🎨</span>
+                                <span>Templates</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/blog-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">📝</span>
+                                <span>Blog Posts</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/orders-manager.html" class="admin-nav-link active">
+                                <span class="admin-nav-icon">🛒</span>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="admin-nav-section">
+                    <div class="admin-nav-title">Settings</div>
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="/admin/settings.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">⚙️</span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link" onclick="CaliusAuth.logout(); return false;">
+                                <span class="admin-nav-icon">🚪</span>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="admin-header-left">
+                    <h1 class="admin-header-title">Orders</h1>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="admin-content">
+                
+                <!-- Stats -->
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">💰</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Revenue</div>
+                            <div class="stat-value" id="total-revenue">$0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon success">✓</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Completed Orders</div>
+                            <div class="stat-value" id="completed-orders">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon warning">⏳</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Pending Orders</div>
+                            <div class="stat-value" id="pending-orders">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon error">👥</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Customers</div>
+                            <div class="stat-value" id="total-customers">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">All Orders</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="orders-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Customer</th>
+                                        <th>Items</th>
+                                        <th>Amount</th>
+                                        <th>Payment</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="8" style="text-align: center; padding: 2rem;">
+                                            Loading...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/cms.js"></script>
+    
+    <script>
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+        
+        // Load orders
+        async function loadOrders() {
+            try {
+                const orders = await CaliusCMS.OrderManager.loadAll();
+                const tbody = document.querySelector('#orders-table tbody');
+                
+                // Update stats
+                const completedOrders = orders.filter(o => o.orderStatus === 'completed');
+                const pendingOrders = orders.filter(o => o.orderStatus === 'pending');
+                const totalRevenue = completedOrders.reduce((sum, o) => sum + o.total, 0);
+                const uniqueCustomers = new Set(orders.map(o => o.customer.email)).size;
+                
+                document.getElementById('total-revenue').textContent = '$' + totalRevenue.toFixed(2);
+                document.getElementById('completed-orders').textContent = completedOrders.length;
+                document.getElementById('pending-orders').textContent = pendingOrders.length;
+                document.getElementById('total-customers').textContent = uniqueCustomers;
+                
+                if (orders.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                No orders yet. Orders will appear here when customers make purchases.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                tbody.innerHTML = orders.map(order => `
+                    <tr>
+                        <td><strong>${order.orderNumber}</strong></td>
+                        <td>
+                            ${order.customer.firstName} ${order.customer.lastName}<br>
+                            <small style="color: var(--text-secondary);">${order.customer.email}</small>
+                        </td>
+                        <td>${order.items.map(i => i.templateName).join(', ')}</td>
+                        <td><strong>$${order.total.toFixed(2)}</strong></td>
+                        <td>
+                            <span class="admin-badge secondary">${order.paymentMethod}</span>
+                        </td>
+                        <td>
+                            <span class="admin-badge ${order.orderStatus === 'completed' ? 'success' : order.orderStatus === 'pending' ? 'warning' : 'error'}">
+                                ${order.orderStatus}
+                            </span>
+                        </td>
+                        <td>${new Date(order.orderDate).toLocaleDateString()}</td>
+                        <td class="admin-table-actions">
+                            <button class="admin-table-btn edit" onclick="viewOrder('${order.id}')">View</button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                const tbody = document.querySelector('#orders-table tbody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 2rem; color: var(--error-color);">
+                            Error loading orders. Check console for details.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+        
+        // View order details
+        function viewOrder(orderId) {
+            const order = CaliusCMS.OrderManager.getById(orderId);
+            if (!order) {
+                alert('Order not found');
+                return;
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'admin-modal-overlay active';
+            modal.innerHTML = `
+                <div class="admin-modal">
+                    <div class="admin-modal-header">
+                        <h3 class="admin-modal-title">Order Details - ${order.orderNumber}</h3>
+                        <button class="admin-modal-close" onclick="this.closest('.admin-modal-overlay').remove()">×</button>
+                    </div>
+                    <div class="admin-modal-body">
+                        <h4>Customer Information</h4>
+                        <p><strong>Name:</strong> ${order.customer.firstName} ${order.customer.lastName}</p>
+                        <p><strong>Email:</strong> ${order.customer.email}</p>
+                        <p><strong>Phone:</strong> ${order.customer.phone || 'N/A'}</p>
+                        <p><strong>Country:</strong> ${order.customer.country || 'N/A'}</p>
+                        
+                        <hr style="margin: 1.5rem 0;">
+                        
+                        <h4>Order Items</h4>
+                        ${order.items.map(item => `
+                            <p>• ${item.templateName} - $${item.price.toFixed(2)}</p>
+                        `).join('')}
+                        
+                        <hr style="margin: 1.5rem 0;">
+                        
+                        <h4>Payment Information</h4>
+                        <p><strong>Total:</strong> $${order.total.toFixed(2)}</p>
+                        <p><strong>Payment Method:</strong> ${order.paymentMethod}</p>
+                        <p><strong>Payment Status:</strong> <span class="admin-badge ${order.paymentStatus === 'completed' ? 'success' : 'warning'}">${order.paymentStatus}</span></p>
+                        <p><strong>Order Status:</strong> <span class="admin-badge ${order.orderStatus === 'completed' ? 'success' : 'warning'}">${order.orderStatus}</span></p>
+                        <p><strong>Order Date:</strong> ${new Date(order.orderDate).toLocaleString()}</p>
+                    </div>
+                    <div class="admin-modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.admin-modal-overlay').remove()">Close</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!CaliusAuth.requireAuth()) {
+                return;
+            }
+            
+            // Load orders
+            loadOrders();
+        });
+    </script>
+    
+</body>
+</html>

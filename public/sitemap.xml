@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    
+    <!-- Homepage -->
+    <url>
+        <loc>https://calius.digital/</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://calius.digital/?lang=en"/>
+        <xhtml:link rel="alternate" hreflang="id" href="https://calius.digital/?lang=id"/>
+    </url>
+    
+    <!-- About Page -->
+    <url>
+        <loc>https://calius.digital/about</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://calius.digital/about?lang=en"/>
+        <xhtml:link rel="alternate" hreflang="id" href="https://calius.digital/about?lang=id"/>
+    </url>
+    
+    <!-- Templates Page -->
+    <url>
+        <loc>https://calius.digital/templates</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://calius.digital/templates?lang=en"/>
+        <xhtml:link rel="alternate" hreflang="id" href="https://calius.digital/templates?lang=id"/>
+    </url>
+    
+    <!-- Blog Page -->
+    <url>
+        <loc>https://calius.digital/blog</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://calius.digital/blog?lang=en"/>
+        <xhtml:link rel="alternate" hreflang="id" href="https://calius.digital/blog?lang=id"/>
+    </url>
+    
+    <!-- Contact Page -->
+    <url>
+        <loc>https://calius.digital/contact</loc>
+        <lastmod>2024-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://calius.digital/contact?lang=en"/>
+        <xhtml:link rel="alternate" hreflang="id" href="https://calius.digital/contact?lang=id"/>
+    </url>
+    
+    <!-- Template Categories -->
+    <url>
+        <loc>https://calius.digital/templates?category=business</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://calius.digital/templates?category=ecommerce</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://calius.digital/templates?category=portfolio</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://calius.digital/templates?category=landing-page</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://calius.digital/templates?category=restaurant</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- Note: Blog posts will be added dynamically by the CMS -->
+    
+</urlset>

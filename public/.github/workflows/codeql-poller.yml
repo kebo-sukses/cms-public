@@ -1,0 +1,64 @@
+name: CodeQL Alert Poller
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      hours:
+        description: 'How many hours back to poll for recent alerts'
+        required: false
+        default: '24'
+      dry_run:
+        description: 'If true, do not dispatch triage workflows; just log actions (use for smoke tests)'
+        required: false
+        default: 'false'
+
+permissions:
+  actions: read
+  code-scanning: read
+  workflows: write
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Poll CodeQL alerts and dispatch triage
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const hours = parseInt(core.getInput('hours') || '24', 10);
+            const dryRun = (core.getInput('dry_run') || 'false').toLowerCase() === 'true';
+            const since = new Date(Date.now() - hours * 3600 * 1000).toISOString();
+            core.info(`Polling CodeQL alerts for ${owner}/${repo} since ${since} (dry_run=${dryRun})`);
+
+            let page = 1;
+            const per_page = 100;
+            let dispatched = 0;
+            while (true) {
+              const res = await github.rest.codeScanning.listAlertsForRepo({ owner, repo, per_page, page, state: 'open' });
+              const alerts = res.data || [];
+              if (!alerts.length) break;
+              for (const a of alerts) {
+                // Use alert number if available
+                const alertNum = a.number || a.alert_number || a.id;
+                const updatedAt = a.updated_at || a.created_at || a.createdAt;
+                if (!alertNum) continue;
+                if (updatedAt && new Date(updatedAt) < new Date(since)) continue;
+                core.info(`Dispatching triage for alert ${alertNum} (updated: ${updatedAt})`);
+                if (!dryRun) {
+                  await github.rest.actions.createWorkflowDispatch({ owner, repo, workflow_id: 'codeql-triage.yml', ref: 'main', inputs: { alert_id: String(alertNum) } });
+                } else {
+                  core.info(`DRY RUN: would dispatch triage for alert ${alertNum}`);
+                }
+                dispatched += 1;
+                // small delay to avoid hitting rate limits
+                await new Promise(res => setTimeout(res, 500));
+              }
+              if (alerts.length < per_page) break;
+              page += 1;
+            }
+            core.info(`Dispatched triage for ${dispatched} alerts (since ${since})`);
