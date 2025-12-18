@@ -24,6 +24,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: php
+          packs: codeql/php-all@latest
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
