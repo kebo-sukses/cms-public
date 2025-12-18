@@ -57,10 +57,26 @@ PY
           if [ -d codeql ]; then
             echo "codeql directory exists; making cli executable"
             chmod +x codeql/codeql || true
+            echo "Listing codeql directory:" > codeql-extract-listing.txt
+            ls -la codeql >> codeql-extract-listing.txt || true
+            echo "CodeQL CLI version (if available):" >> codeql-extract-listing.txt
+            ./codeql/codeql --version >> codeql-extract-listing.txt 2>&1 || true
+            ./codeql/codeql resolve languages --format=json > codeql-langs.json 2>/dev/null || true
+            head -n 200 codeql-langs.json >> codeql-extract-listing.txt || true
           else
             echo "codeql directory not found after unzip"
+            ls -la > codeql-extract-listing.txt || true
           fi
           echo "$(pwd)/codeql" >> $GITHUB_PATH
+
+      - name: Upload CodeQL diagnostics artifact (non-fatal)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-diagnostics
+          path: |
+            codeql-extract-listing.txt
+            codeql-langs.json
 
       - name: Ensure PHP CodeQL packs are installed (fallback)
         run: |
