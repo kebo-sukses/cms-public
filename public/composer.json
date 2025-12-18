@@ -1,0 +1,7 @@
+{
+  "name": "calius/static-cms",
+  "description": "Calius Digital static CMS - test tooling",
+  "require-dev": {
+    "phpunit/phpunit": "^9.6"
+  }
+}

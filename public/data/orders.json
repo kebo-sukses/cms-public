@@ -1,0 +1,69 @@
+{
+  "orders": [],
+  "statistics": {
+    "totalOrders": 0,
+    "totalRevenue": 0,
+    "totalCustomers": 0,
+    "averageOrderValue": 0,
+    "conversionRate": 0,
+    "topSellingTemplates": [],
+    "revenueByMonth": {},
+    "ordersByCategory": {
+      "business": 0,
+      "ecommerce": 0,
+      "portfolio": 0,
+      "landing-page": 0,
+      "restaurant": 0
+    },
+    "paymentMethods": {
+      "stripe": 0,
+      "paypal": 0,
+      "midtrans": 0
+    }
+  },
+  "orderSchema": {
+    "example": {
+      "id": "order-001",
+      "orderNumber": "ORD-20240101-001",
+      "customer": {
+        "email": "customer@example.com",
+        "firstName": "John",
+        "lastName": "Doe",
+        "country": "United States",
+        "phone": "+1234567890"
+      },
+      "items": [
+        {
+          "templateId": "tpl-001",
+          "templateName": "Corporate Pro Business",
+          "price": 49,
+          "quantity": 1,
+          "downloadUrl": "/downloads/order-001/corporate-pro.zip"
+        }
+      ],
+      "subtotal": 49,
+      "tax": 0,
+      "discount": 0,
+      "total": 49,
+      "currency": "USD",
+      "paymentMethod": "stripe",
+      "paymentStatus": "completed",
+      "paymentId": "pi_xxxxxxxxxxxxx",
+      "orderStatus": "completed",
+      "downloadStatus": "available",
+      "downloadCount": 0,
+      "downloadLimit": 5,
+      "downloadExpiry": "2025-01-01T00:00:00Z",
+      "orderDate": "2024-01-01T12:00:00Z",
+      "completedDate": "2024-01-01T12:05:00Z",
+      "ipAddress": "192.168.1.1",
+      "userAgent": "Mozilla/5.0...",
+      "notes": "",
+      "refunded": false,
+      "refundAmount": 0,
+      "refundDate": null,
+      "emailSent": true,
+      "invoiceUrl": "/invoices/order-001.pdf"
+    }
+  }
+}

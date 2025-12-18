@@ -1,0 +1,78 @@
+name: CodeQL Debug
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/import-public]
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Debug: Download and extract CodeQL bundle
+        run: |
+          set -x
+          CODEQL_VERSION="v2.23.8"
+          URLS=("https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_VERSION}/codeql.zip" "https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_VERSION}/codeql-linux64.zip")
+          echo "Attempting downloads: ${URLS[*]}"
+          rm -f codeql.zip headers.txt
+          for URL in "${URLS[@]}"; do
+            echo "Trying $URL"
+            http_status=$(curl -sSL -w "%{http_code}" -D headers.txt -o codeql.zip "$URL" || echo 000)
+            echo "HTTP status: $http_status"
+            if [ "$http_status" = "200" ] && [ -s codeql.zip ]; then
+              echo "download ok from $URL"
+              break
+            fi
+            echo "failed, dumping headers:"; cat headers.txt || true
+          done
+          file codeql.zip || true
+          if command -v unzip >/dev/null 2>&1; then
+            unzip -q codeql.zip || (echo "unzip failed"; exit 0)
+          else
+            python - <<'PY'
+import zipfile, sys
+try:
+  with zipfile.ZipFile('codeql.zip') as z:
+    z.extractall()
+except Exception as e:
+  print('zip extract failed', e)
+  sys.exit(0)
+PY
+          fi
+
+      - name: Debug: Inspect extraction and run CodeQL checks
+        run: |
+          echo "--- inspect ---" > codeql-extract-listing.txt
+          ls -la >> codeql-extract-listing.txt || true
+          if [ -x "./codeql/codeql" ]; then
+            ./codeql/codeql --version >> codeql-extract-listing.txt 2>&1 || true
+            echo "packs before:" >> codeql-extract-listing.txt
+            ./codeql/codeql pack list >> codeql-extract-listing.txt 2>&1 || true
+            echo "resolve languages before:" >> codeql-extract-listing.txt
+            ./codeql/codeql resolve languages --format=json > codeql-langs.json 2>/dev/null || true
+            head -n 200 codeql-langs.json >> codeql-extract-listing.txt || true
+            echo "attempting pack install of php pack" >> codeql-extract-listing.txt
+            ./codeql/codeql pack install codeql/php-all@latest || ./codeql/codeql pack install codeql/php-all@latest --no-verify || true
+            echo "packs after:" >> codeql-extract-listing.txt
+            ./codeql/codeql pack list >> codeql-extract-listing.txt 2>&1 || true
+            ./codeql/codeql resolve languages --format=json > codeql-langs.json 2>/dev/null || true
+            head -n 200 codeql-langs.json >> codeql-extract-listing.txt || true
+            echo "attempting php DB create (no build)" >> codeql-extract-listing.txt
+            ./codeql/codeql database create codeql-db-php --language=php --source-root=. --no-build >> codeql-extract-listing.txt 2>&1 || true
+          else
+            echo "codeql CLI not found" >> codeql-extract-listing.txt
+          fi
+
+      - name: Upload debug artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-debug-artifacts
+          path: |
+            codeql-extract-listing.txt
+            codeql-langs.json
+            headers.txt
+            codeql.zip

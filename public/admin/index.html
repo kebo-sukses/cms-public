@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Dashboard - Calius Digital Admin</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+    
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-logo">Calius Admin</div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+            </div>
+            
+            <nav class="admin-nav">
+                <div class="admin-nav-section">
+                    <div class="admin-nav-title">Main</div>
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="/admin/index.html" class="admin-nav-link active">
+                                <span class="admin-nav-icon">📊</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/templates-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">🎨</span>
+                                <span>Templates</span>
+                                <span class="admin-nav-badge">5</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/blog-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">📝</span>
+                                <span>Blog Posts</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/orders-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">🛒</span>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="admin-nav-section">
+                    <div class="admin-nav-title">Settings</div>
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="/admin/settings.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">⚙️</span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link" onclick="CaliusAuth.logout(); return false;">
+                                <span class="admin-nav-icon">🚪</span>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Mobile Menu Toggle Button (Visible when sidebar is collapsed) -->
+            <button class="mobile-menu-btn" onclick="toggleSidebar()" title="Open Menu">
+                ☰
+            </button>
+            
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="admin-header-left">
+                    <h1 class="admin-header-title">Dashboard</h1>
+                </div>
+                
+                <div class="admin-header-right">
+                    <div class="admin-user-menu">
+                        <div class="admin-user-info">
+                            <div class="admin-user-name">Admin</div>
+                            <div class="admin-user-role">Administrator</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="admin-content">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">💰</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Revenue</div>
+                            <div class="stat-value" id="stat-revenue">$0</div>
+                            <div class="stat-change positive">+0% from last month</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon success">📦</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Orders</div>
+                            <div class="stat-value" id="stat-orders">0</div>
+                            <div class="stat-change positive">+0% from last month</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon warning">🎨</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Templates</div>
+                            <div class="stat-value" id="stat-templates">5</div>
+                            <div class="stat-change">Active templates</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon error">👥</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Customers</div>
+                            <div class="stat-value" id="stat-customers">0</div>
+                            <div class="stat-change">Total customers</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Orders -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Recent Orders</h3>
+                        <div class="admin-card-actions">
+                            <a href="/admin/orders-manager.html" class="btn btn-sm btn-primary">View All</a>
+                        </div>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="recent-orders-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Customer</th>
+                                        <th>Template</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                            No orders yet
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="admin-card" style="margin-top: 2rem;">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Quick Actions</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="grid grid-3">
+                            <a href="/admin/templates-manager.html" class="btn btn-primary" style="text-decoration: none;">
+                                ➕ Add New Template
+                            </a>
+                            <a href="/admin/templates-manager.html#upload" class="btn btn-secondary" style="text-decoration: none;">
+                                📤 Upload Template
+                            </a>
+                            <a href="/admin/blog-manager.html" class="btn btn-primary" style="text-decoration: none;">
+                                📝 Create Blog Post
+                            </a>
+                            <a href="/admin/settings.html" class="btn btn-primary" style="text-decoration: none;">
+                                ⚙️ Manage Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- System Info -->
+                <div class="admin-card" style="margin-top: 2rem;">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">System Information</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="grid grid-2">
+                            <div>
+                                <strong>CMS Version:</strong> 1.0.0
+                            </div>
+                            <div>
+                                <strong>Last Updated:</strong> <span id="last-updated">-</span>
+                            </div>
+                            <div>
+                                <strong>Storage:</strong> File-based (JSON)
+                            </div>
+                            <div>
+                                <strong>Payment Gateways:</strong> Stripe, PayPal, Midtrans
+                            </div>
+                        </div>
+                        
+                        <div class="admin-alert info" style="margin-top: 1.5rem;">
+                            <div class="admin-alert-icon">ℹ️</div>
+                            <div class="admin-alert-content">
+                                <div class="admin-alert-title">Static CMS Notice</div>
+                                <p>This is a static CMS. After making changes, you'll need to manually update the JSON files in the <code>/data</code> directory via cPanel File Manager. Instructions will be provided when you save changes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/cms.js"></script>
+    
+    <script>
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+        
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                // Load orders
+                const orders = await CaliusCMS.OrderManager.loadAll();
+                
+                // Load templates
+                const templates = await CaliusCMS.TemplateManager.loadAll();
+                
+                // Calculate statistics
+                const completedOrders = orders.filter(o => o.orderStatus === 'completed');
+                const totalRevenue = completedOrders.reduce((sum, o) => sum + o.total, 0);
+                const uniqueCustomers = new Set(orders.map(o => o.customer.email)).size;
+                
+                // Update stats
+                document.getElementById('stat-revenue').textContent = '$' + totalRevenue.toFixed(2);
+                document.getElementById('stat-orders').textContent = orders.length;
+                document.getElementById('stat-templates').textContent = templates.length;
+                document.getElementById('stat-customers').textContent = uniqueCustomers;
+                
+                // Update recent orders table
+                if (orders.length > 0) {
+                    const recentOrders = orders.slice(-5).reverse();
+                    const tbody = document.querySelector('#recent-orders-table tbody');
+                    tbody.innerHTML = recentOrders.map(order => `
+                        <tr>
+                            <td><strong>${order.orderNumber}</strong></td>
+                            <td>${order.customer.firstName} ${order.customer.lastName}</td>
+                            <td>${order.items.map(i => i.templateName).join(', ')}</td>
+                            <td>$${order.total.toFixed(2)}</td>
+                            <td>
+                                <span class="admin-badge ${order.orderStatus === 'completed' ? 'success' : 'warning'}">
+                                    ${order.orderStatus}
+                                </span>
+                            </td>
+                            <td>${new Date(order.orderDate).toLocaleDateString()}</td>
+                        </tr>
+                    `).join('');
+                }
+                
+                // Update last updated time
+                document.getElementById('last-updated').textContent = new Date().toLocaleString();
+                
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                CaliusCMS.showNotification('Error loading dashboard data', 'error');
+            }
+        }
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!CaliusAuth.requireAuth()) {
+                return;
+            }
+            
+            // Load dashboard data
+            loadDashboardData();
+            
+            // Refresh every 30 seconds
+            setInterval(loadDashboardData, 30000);
+        });
+    </script>
+    
+</body>
+</html>

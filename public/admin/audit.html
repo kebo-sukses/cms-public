@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Audit Log - Calius Admin</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar (reused minimal) -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-sidebar-header"><div class="admin-logo">Calius Admin</div></div>
+        </aside>
+        <main class="admin-main">
+            <header class="admin-header"><h1 class="admin-header-title">Audit Log</h1></header>
+            <div class="admin-content">
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <div style="display:flex; gap:1rem; align-items:center; margin-bottom:1rem;">
+                            <input id="filter-file" class="admin-form-input" placeholder="File (e.g., settings)">
+                            <input id="filter-user" class="admin-form-input" placeholder="User">
+                            <input id="filter-since" type="date" class="admin-form-input">
+                            <input id="filter-until" type="date" class="admin-form-input">
+                            <button class="btn btn-primary" id="filter-btn">Filter</button>
+                            <button class="btn" id="download-btn">Download JSON</button>
+                        </div>
+
+                        <div id="audit-table" class="admin-table-wrapper">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr><th>Time</th><th>User</th><th>File</th><th>Action</th><th>Summary</th></tr>
+                                </thead>
+                                <tbody id="audit-tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/assets/js/auth.js"></script>
+    <script>
+    async function loadAudit(offset=0, limit=50) {
+        if (!CaliusAuth.requireAuth()) return;
+        const file = document.getElementById('filter-file').value || undefined;
+        const user = document.getElementById('filter-user').value || undefined;
+        const since = document.getElementById('filter-since').value || undefined;
+        const until = document.getElementById('filter-until').value || undefined;
+        const params = new URLSearchParams({ offset, limit });
+        if (file) params.set('file', file);
+        if (user) params.set('user', user);
+        if (since) params.set('since', since);
+        if (until) params.set('until', until);
+        const resp = await fetch('/admin/api/audit.php?' + params.toString());
+        const json = await resp.json();
+        if (!resp.ok) { alert('Failed to load audit: ' + (json.message || resp.statusText)); return; }
+        const tbody = document.getElementById('audit-tbody');
+        tbody.innerHTML = json.entries.map(e => `
+            <tr>
+                <td>${e.timestamp}</td>
+                <td>${e.user || ''}</td>
+                <td>${e.file || ''}</td>
+                <td>${e.action || ''}</td>
+                <td>${e.summary || ''}</td>
+            </tr>
+        `).join('');
+    }
+
+    document.getElementById('filter-btn').addEventListener('click', () => loadAudit());
+    document.getElementById('download-btn').addEventListener('click', async () => {
+        const resp = await fetch('/admin/api/audit.php?limit=1000');
+        const json = await resp.json();
+        const blob = new Blob([JSON.stringify(json.entries || [], null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'audit.json'; a.click(); URL.revokeObjectURL(url);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!CaliusAuth.requireAuth()) return;
+        if (!CaliusAuth.hasPermission('view_analytics')) { alert('Permission required: view_analytics'); return; }
+        loadAudit();
+    });
+    </script>
+</body>
+</html>

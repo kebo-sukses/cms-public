@@ -1,0 +1,188 @@
+{
+  "posts": [
+    {
+      "id": "post-001",
+      "title": {
+        "en": "10 Essential Tips for Choosing the Perfect Website Template",
+        "id": "10 Tips Penting Memilih Template Website yang Sempurna"
+      },
+      "slug": "10-tips-choosing-perfect-website-template",
+      "excerpt": {
+        "en": "Discover the key factors to consider when selecting a website template that will help your business succeed online. From performance to design, we cover everything you need to know.",
+        "id": "Temukan faktor-faktor kunci yang perlu dipertimbangkan saat memilih template website yang akan membantu bisnis Anda sukses online. Dari performa hingga desain, kami bahas semua yang perlu Anda ketahui."
+      },
+      "content": {
+        "en": "<h2>Introduction</h2><p>Choosing the right website template is crucial for your online success...</p>",
+        "id": "<h2>Pendahuluan</h2><p>Memilih template website yang tepat sangat penting untuk kesuksesan online Anda...</p>"
+      },
+      "author": "Calius Team",
+      "authorImage": "/assets/images/authors/team.jpg",
+      "category": "Tips & Guides",
+      "tags": ["website design", "templates", "tips", "web development"],
+      "featuredImage": "/assets/images/blog/choosing-template.jpg",
+      "publishDate": "2024-01-15",
+      "lastModified": "2024-01-15",
+      "readTime": 8,
+      "views": 0,
+      "likes": 0,
+      "comments": [],
+      "status": "published",
+      "featured": true,
+      "seo": {
+        "metaTitle": {
+          "en": "10 Essential Tips for Choosing the Perfect Website Template | Calius Digital",
+          "id": "10 Tips Penting Memilih Template Website yang Sempurna | Calius Digital"
+        },
+        "metaDescription": {
+          "en": "Learn how to choose the perfect website template for your business. Expert tips on performance, design, features, and more.",
+          "id": "Pelajari cara memilih template website yang sempurna untuk bisnis Anda. Tips ahli tentang performa, desain, fitur, dan lainnya."
+        }
+      }
+    },
+    {
+      "id": "post-002",
+      "title": {
+        "en": "Why Website Speed Matters: The Impact on User Experience and SEO",
+        "id": "Mengapa Kecepatan Website Penting: Dampak pada User Experience dan SEO"
+      },
+      "slug": "why-website-speed-matters",
+      "excerpt": {
+        "en": "Learn why website loading speed is critical for user experience, conversions, and search engine rankings. Plus, tips to optimize your site's performance.",
+        "id": "Pelajari mengapa kecepatan loading website sangat penting untuk user experience, konversi, dan ranking mesin pencari. Plus, tips untuk mengoptimalkan performa situs Anda."
+      },
+      "content": {
+        "en": "<h2>The Importance of Speed</h2><p>In today's fast-paced digital world, website speed is more important than ever...</p>",
+        "id": "<h2>Pentingnya Kecepatan</h2><p>Di dunia digital yang serba cepat saat ini, kecepatan website lebih penting dari sebelumnya...</p>"
+      },
+      "author": "Calius Team",
+      "authorImage": "/assets/images/authors/team.jpg",
+      "category": "Performance",
+      "tags": ["website speed", "performance", "seo", "user experience"],
+      "featuredImage": "/assets/images/blog/website-speed.jpg",
+      "publishDate": "2024-01-10",
+      "lastModified": "2024-01-10",
+      "readTime": 6,
+      "views": 0,
+      "likes": 0,
+      "comments": [],
+      "status": "published",
+      "featured": true,
+      "seo": {
+        "metaTitle": {
+          "en": "Why Website Speed Matters for SEO and User Experience | Calius Digital",
+          "id": "Mengapa Kecepatan Website Penting untuk SEO dan User Experience | Calius Digital"
+        },
+        "metaDescription": {
+          "en": "Discover the critical impact of website speed on SEO rankings and user experience. Learn optimization techniques.",
+          "id": "Temukan dampak kritis kecepatan website pada ranking SEO dan user experience. Pelajari teknik optimasi."
+        }
+      }
+    },
+    {
+      "id": "post-003",
+      "title": {
+        "en": "E-commerce Best Practices: How to Increase Online Sales",
+        "id": "Best Practice E-commerce: Cara Meningkatkan Penjualan Online"
+      },
+      "slug": "ecommerce-best-practices-increase-sales",
+      "excerpt": {
+        "en": "Boost your online store's revenue with these proven e-commerce strategies. From product pages to checkout optimization, learn what works.",
+        "id": "Tingkatkan pendapatan toko online Anda dengan strategi e-commerce yang terbukti ini. Dari halaman produk hingga optimasi checkout, pelajari apa yang berhasil."
+      },
+      "content": {
+        "en": "<h2>Optimizing Your E-commerce Store</h2><p>Running a successful online store requires more than just great products...</p>",
+        "id": "<h2>Mengoptimalkan Toko E-commerce Anda</h2><p>Menjalankan toko online yang sukses membutuhkan lebih dari sekedar produk yang bagus...</p>"
+      },
+      "author": "Calius Team",
+      "authorImage": "/assets/images/authors/team.jpg",
+      "category": "E-commerce",
+      "tags": ["ecommerce", "online sales", "conversion", "marketing"],
+      "featuredImage": "/assets/images/blog/ecommerce-sales.jpg",
+      "publishDate": "2024-01-05",
+      "lastModified": "2024-01-05",
+      "readTime": 10,
+      "views": 0,
+      "likes": 0,
+      "comments": [],
+      "status": "published",
+      "featured": false,
+      "seo": {
+        "metaTitle": {
+          "en": "E-commerce Best Practices to Increase Online Sales | Calius Digital",
+          "id": "Best Practice E-commerce untuk Meningkatkan Penjualan Online | Calius Digital"
+        },
+        "metaDescription": {
+          "en": "Learn proven e-commerce strategies to boost your online sales. Expert tips on optimization and conversion.",
+          "id": "Pelajari strategi e-commerce terbukti untuk meningkatkan penjualan online Anda. Tips ahli tentang optimasi dan konversi."
+        }
+      }
+    }
+  ],
+  "categories": [
+    {
+      "id": "tips-guides",
+      "name": {
+        "en": "Tips & Guides",
+        "id": "Tips & Panduan"
+      },
+      "slug": "tips-guides",
+      "description": {
+        "en": "Helpful tips and comprehensive guides for web development",
+        "id": "Tips berguna dan panduan lengkap untuk pengembangan web"
+      },
+      "count": 1
+    },
+    {
+      "id": "performance",
+      "name": {
+        "en": "Performance",
+        "id": "Performa"
+      },
+      "slug": "performance",
+      "description": {
+        "en": "Articles about website performance and optimization",
+        "id": "Artikel tentang performa dan optimasi website"
+      },
+      "count": 1
+    },
+    {
+      "id": "ecommerce",
+      "name": {
+        "en": "E-commerce",
+        "id": "E-commerce"
+      },
+      "slug": "ecommerce",
+      "description": {
+        "en": "E-commerce strategies and best practices",
+        "id": "Strategi dan best practice e-commerce"
+      },
+      "count": 1
+    },
+    {
+      "id": "design",
+      "name": {
+        "en": "Design",
+        "id": "Desain"
+      },
+      "slug": "design",
+      "description": {
+        "en": "Web design trends and inspiration",
+        "id": "Tren dan inspirasi desain web"
+      },
+      "count": 0
+    },
+    {
+      "id": "seo",
+      "name": {
+        "en": "SEO",
+        "id": "SEO"
+      },
+      "slug": "seo",
+      "description": {
+        "en": "Search engine optimization tips and techniques",
+        "id": "Tips dan teknik optimasi mesin pencari"
+      },
+      "count": 0
+    }
+  ]
+}

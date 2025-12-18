@@ -1,0 +1,29 @@
+# CALIUS.DIGITAL - Robots.txt
+# SEO Configuration for Search Engines
+
+User-agent: *
+
+# Allow public pages
+Allow: /
+Allow: /index.html
+Allow: /about.html
+Allow: /templates.html
+Allow: /blog.html
+Allow: /contact.html
+Allow: /assets/
+
+# Block admin panel from all search engines
+Disallow: /admin/
+Disallow: /data/
+Disallow: /checkout.html
+
+# Block sensitive files
+Disallow: /*.json$
+Disallow: /*.log$
+Disallow: /*.bak$
+
+# Sitemap location
+Sitemap: https://calius.digital/sitemap.xml
+
+# Crawl delay (optional - prevents aggressive crawling)
+Crawl-delay: 1

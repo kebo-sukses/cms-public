@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Templates Manager - Calius Digital Admin</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+    
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-logo">Calius Admin</div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+            </div>
+            
+            <nav class="admin-nav">
+                <div class="admin-nav-section">
+                    <div class="admin-nav-title">Main</div>
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="/admin/index.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">📊</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/templates-manager.html" class="admin-nav-link active">
+                                <span class="admin-nav-icon">🎨</span>
+                                <span>Templates</span>
+                                <span class="admin-nav-badge" id="templates-count">0</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/blog-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">📝</span>
+                                <span>Blog Posts</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/orders-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">🛒</span>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="admin-nav-section">
+                    <div class="admin-nav-title">Settings</div>
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="/admin/settings.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">⚙️</span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link" onclick="CaliusAuth.logout(); return false;">
+                                <span class="admin-nav-icon">🚪</span>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="admin-header-left">
+                    <h1 class="admin-header-title">Templates Manager</h1>
+                </div>
+                
+                <div class="admin-header-right">
+                    <button class="btn btn-secondary" id="upload-template-btn" onclick="showUploadTemplateModal()">
+                        📤 Upload Template ZIP
+                    </button>
+                    <button class="btn btn-warning" id="deploy-btn" onclick="confirmTriggerDeploy()" title="Trigger deploy workflow on GitHub Actions">
+                        🚀 Deploy
+                    </button>
+                    <button class="btn btn-primary" id="add-template-btn" onclick="showAddTemplateModal()">
+                        ➕ Add New Template
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="admin-content">
+                <!-- Filters -->
+                <div class="admin-card" style="margin-bottom: var(--spacing-lg);">
+                    <div class="admin-card-body">
+                        <div style="display: flex; gap: var(--spacing-md); align-items: center; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 250px;">
+                                <input type="text" id="search-templates" class="form-input" placeholder="Search templates...">
+                            </div>
+                            <select id="filter-category" class="form-select" style="min-width: 150px;">
+                                <option value="">All Categories</option>
+                                <option value="business">Business</option>
+                                <option value="ecommerce">E-commerce</option>
+                                <option value="portfolio">Portfolio</option>
+                                <option value="landing-page">Landing Page</option>
+                                <option value="restaurant">Restaurant</option>
+                            </select>
+                            <select id="filter-status" class="form-select" style="min-width: 150px;">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Templates Table -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">All Templates</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-card" style="margin-bottom: 1rem;">
+                            <div class="admin-card-body">
+                                <h4>Uploaded Template Artifacts</h4>
+                                <div id="artifacts-list">Loading artifacts...</div>
+                            </div>
+                        </div>
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="templates-table">
+                                <thead>
+                                    <tr>
+                                        <th>Preview</th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Price</th>
+                                        <th>Downloads</th>
+                                        <th>Rating</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="8" style="text-align: center; padding: 2rem;">
+                                            <div class="loading"></div>
+                                            <p style="margin-top: 1rem;">Loading templates...</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Template Modal -->
+    <div class="admin-modal-overlay" id="template-modal">
+        <div class="admin-modal" style="max-width: 800px;">
+            <div class="admin-modal-header">
+                <h3 class="admin-modal-title" id="modal-title">Add New Template</h3>
+                <button class="admin-modal-close" onclick="closeTemplateModal()">×</button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="template-form">
+                    <input type="hidden" id="template-id" name="id">
+                    
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label required">Name (English)</label>
+                            <input type="text" name="name_en" class="admin-form-input" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label required">Name (Indonesian)</label>
+                            <input type="text" name="name_id" class="admin-form-input" required>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label required">Category</label>
+                            <select name="category" class="admin-form-select" required>
+                                <option value="">Select Category</option>
+                                <option value="business">Business</option>
+                                <option value="ecommerce">E-commerce</option>
+                                <option value="portfolio">Portfolio</option>
+                                <option value="landing-page">Landing Page</option>
+                                <option value="restaurant">Restaurant</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label required">Price (USD)</label>
+                            <input type="number" name="price" class="admin-form-input" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-form-group">
+                        <label class="admin-form-label">Sale Price (USD)</label>
+                        <input type="number" name="salePrice" class="admin-form-input" min="0" step="0.01">
+                        <div class="admin-form-help">Leave empty if no sale</div>
+                    </div>
+                    
+                    <div class="admin-form-group">
+                        <label class="admin-form-label required">Description (English)</label>
+                        <textarea name="description_en" class="admin-form-textarea" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="admin-form-group">
+                        <label class="admin-form-label required">Description (Indonesian)</label>
+                        <textarea name="description_id" class="admin-form-textarea" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Demo URL</label>
+                            <input type="url" name="demoUrl" class="admin-form-input">
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Number of Pages</label>
+                            <input type="number" name="pages" class="admin-form-input" min="1" value="1">
+                        </div>
+                    </div>
+                    
+                    <div class="admin-form-group">
+                        <label class="admin-form-label">Preview Image URL</label>
+                        <input type="text" name="previewImage" class="admin-form-input" placeholder="/assets/images/templates/preview.jpg">
+                        <div class="admin-form-help">Upload image via cPanel File Manager first</div>
+                    </div>
+                    
+                    <div class="admin-form-group">
+                        <label class="admin-form-label">Tags (comma separated)</label>
+                        <input type="text" name="tags" class="admin-form-input" placeholder="business, corporate, professional">
+                    </div>
+                    
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">
+                                <input type="checkbox" name="featured"> Featured
+                            </label>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">
+                                <input type="checkbox" name="bestseller"> Bestseller
+                            </label>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">
+                                <input type="checkbox" name="new" checked> New
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-alert info">
+                        <div class="admin-alert-icon">ℹ️</div>
+                        <div class="admin-alert-content">
+                            <strong>Important:</strong> After saving, you'll need to manually update the JSON file via cPanel File Manager.
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-secondary" onclick="closeTemplateModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveTemplate()">Save Template</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Template Modal -->
+    <div class="admin-modal-overlay" id="upload-modal">
+        <div class="admin-modal" style="max-width: 600px;">
+            <div class="admin-modal-header">
+                <h3 class="admin-modal-title">Upload Template ZIP</h3>
+                <button class="admin-modal-close" onclick="closeUploadModal()">×</button>
+            </div>
+            <div class="admin-modal-body">
+                <div id="upload-key-hint" style="display:none; margin-bottom: 1rem;"></div>
+                <div class="admin-form-group">
+                    <label class="admin-form-label required">Template ZIP</label>
+                    <input type="file" id="template-zip-file" accept=".zip" class="admin-form-input">
+                </div>
+                <div class="admin-form-group">
+                    <label class="admin-form-label">Version / Tag (optional)</label>
+                    <input type="text" id="template-version" class="admin-form-input" placeholder="v1.0.0">
+                </div>
+                <div id="upload-progress" style="display:none; margin-top: 1rem;"></div>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-secondary" onclick="closeUploadModal()">Cancel</button>
+                <button class="btn" onclick="checkStorageStatus()" title="Check artifacts storage">Check storage</button>
+                <button class="btn" onclick="showRecentUploadFails()" title="Show recent upload failures">Show upload errors</button>
+                <button class="btn btn-primary" onclick="uploadTemplate()">Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/cms.js"></script>
+    
+    <script>
+        let allTemplates = [];
+        let editingTemplateId = null;
+        
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('admin-sidebar').classList.toggle('collapsed');
+        }
+        
+        // Load templates
+        async function loadTemplates() {
+            try {
+                allTemplates = await CaliusCMS.TemplateManager.loadAll();
+                document.getElementById('templates-count').textContent = allTemplates.length;
+                displayTemplates(allTemplates);
+            } catch (error) {
+                console.error('Error loading templates:', error);
+                CaliusCMS.showNotification('Error loading templates', 'error');
+            }
+        }
+        
+        // Display templates
+        function displayTemplates(templates) {
+            const tbody = document.querySelector('#templates-table tbody');
+            
+            if (templates.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            No templates found
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            function renderActions(template) {
+                const canManage = CaliusAuth.hasPermission('manage_templates');
+                const editClass = 'admin-table-btn edit' + (!canManage ? ' btn-disabled' : '');
+                const delClass = 'admin-table-btn delete' + (!canManage ? ' btn-disabled' : '');
+                const editBtn = `<button class="${editClass}" ${!canManage ? 'disabled title="Permission required: manage_templates"' : `onclick="editTemplate('${template.id}')"`}>Edit</button>`;
+                const delBtn = `<button class="${delClass}" ${!canManage ? 'disabled title="Permission required: manage_templates"' : `onclick="deleteTemplate('${template.id}')"`}>Delete</button>`;
+                return editBtn + delBtn;
+            }
+
+            tbody.innerHTML = templates.map(template => `
+                <tr>
+                    <td>
+                        <img src="${template.previewImage}" alt="${template.name.en}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;">
+                    </td>
+                    <td>
+                        <strong>${template.name.en}</strong><br>
+                        <small style="color: var(--text-secondary);">${template.slug}</small>
+                    </td>
+                    <td>
+                        <span class="admin-badge secondary">${template.category}</span>
+                    </td>
+                    <td>
+                        <strong>$${template.salePrice || template.price}</strong>
+                        ${template.salePrice ? `<br><small style="text-decoration: line-through; color: var(--text-light);">$${template.price}</small>` : ''}
+                    </td>
+                    <td>${template.downloads}</td>
+                    <td>⭐ ${template.rating.toFixed(1)}</td>
+                    <td>
+                        <span class="admin-badge ${template.status === 'active' ? 'success' : 'secondary'}">
+                            ${template.status}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="admin-table-actions">
+                            ${renderActions(template)}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Show add template modal
+        function showAddTemplateModal() {
+            editingTemplateId = null;
+            document.getElementById('modal-title').textContent = 'Add New Template';
+            document.getElementById('template-form').reset();
+            document.getElementById('template-id').value = '';
+            document.getElementById('template-modal').classList.add('active');
+        }
+
+        // Trigger GitHub Actions workflow dispatch
+        async function confirmTriggerDeploy() {
+            if (!CaliusAuth.hasPermission('manage_templates') && !CaliusAuth.hasPermission('manage_settings')) {
+                CaliusCMS.showNotification('Permission required: manage_templates or manage_settings', 'error');
+                return;
+            }
+            // Ask user for optional PAT (do not store) because server may have env token configured
+            const token = window.prompt('Optional: paste a GitHub Personal Access Token (repo scope) to use for this request, or leave empty to use server configuration');
+            const workflow = window.prompt('Workflow file name (default: deploy-to-cpanel.yml)') || 'deploy-to-cpanel.yml';
+            const ref = window.prompt('Ref/branch to dispatch (default: main)') || 'main';
+
+            const payload = new URLSearchParams();
+            payload.append('workflow', workflow);
+            payload.append('ref', ref);
+            if (token) payload.append('token', token);
+
+            const modalText = 'Triggering deploy...';
+            CaliusCMS.showNotification(modalText, 'info');
+
+            try {
+                const r = await fetch('/admin/api/trigger-deploy.php', { method: 'POST', body: payload, credentials: 'same-origin' });
+                const json = await r.json();
+                if (r.ok && json.success) {
+                    CaliusCMS.showNotification('Deploy workflow dispatched successfully', 'success');
+                } else {
+                    console.error('Deploy failed', json);
+                    CaliusCMS.showNotification('Deploy failed: ' + (json.message || 'unknown'), 'error');
+                }
+            } catch (err) {
+                console.error('Deploy request error', err);
+                CaliusCMS.showNotification('Deploy request failed: ' + err.message, 'error');
+            }
+        }
+        
+        // Edit template
+        function editTemplate(templateId) {
+            const template = allTemplates.find(t => t.id === templateId);
+            if (!template) return;
+            
+            editingTemplateId = templateId;
+            document.getElementById('modal-title').textContent = 'Edit Template';
+            
+            // Fill form
+            const form = document.getElementById('template-form');
+            form.querySelector('[name="id"]').value = template.id;
+            form.querySelector('[name="name_en"]').value = template.name.en;
+            form.querySelector('[name="name_id"]').value = template.name.id;
+            form.querySelector('[name="category"]').value = template.category;
+            form.querySelector('[name="price"]').value = template.price;
+            form.querySelector('[name="salePrice"]').value = template.salePrice || '';
+            form.querySelector('[name="description_en"]').value = template.description.en;
+            form.querySelector('[name="description_id"]').value = template.description.id;
+            form.querySelector('[name="demoUrl"]').value = template.demoUrl;
+            form.querySelector('[name="pages"]').value = template.pages;
+            form.querySelector('[name="previewImage"]').value = template.previewImage;
+            form.querySelector('[name="tags"]').value = template.tags.join(', ');
+            form.querySelector('[name="featured"]').checked = template.featured;
+            form.querySelector('[name="bestseller"]').checked = template.bestseller;
+            form.querySelector('[name="new"]').checked = template.new;
+            
+            document.getElementById('template-modal').classList.add('active');
+        }
+        
+        // Save template
+        async function saveTemplate() {
+            const form = document.getElementById('template-form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const formData = new FormData(form);
+            const templateData = {
+                name: {
+                    en: formData.get('name_en'),
+                    id: formData.get('name_id')
+                },
+                slug: formData.get('name_en').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                category: formData.get('category'),
+                price: parseFloat(formData.get('price')),
+                salePrice: formData.get('salePrice') ? parseFloat(formData.get('salePrice')) : null,
+                description: {
+                    en: formData.get('description_en'),
+                    id: formData.get('description_id')
+                },
+                demoUrl: formData.get('demoUrl'),
+                pages: parseInt(formData.get('pages')),
+                previewImage: formData.get('previewImage'),
+                tags: formData.get('tags').split(',').map(t => t.trim()).filter(t => t),
+                featured: formData.get('featured') === 'on',
+                bestseller: formData.get('bestseller') === 'on',
+                new: formData.get('new') === 'on',
+                features: { en: [], id: [] },
+                technologies: [],
+                images: []
+            };
+            
+            const saveBtn = document.querySelector('#template-modal .btn.btn-primary');
+            try {
+                if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving...'; }
+
+                if (editingTemplateId) {
+                    await CaliusCMS.TemplateManager.update(editingTemplateId, templateData);
+                    CaliusCMS.showNotification('Template updated successfully', 'success');
+                } else {
+                    await CaliusCMS.TemplateManager.create(templateData);
+                    CaliusCMS.showNotification('Template created successfully', 'success');
+                }
+
+                closeTemplateModal();
+                loadTemplates();
+            } catch (error) {
+                console.error('Error saving template:', error);
+                CaliusCMS.showNotification('Error saving template', 'error');
+            } finally {
+                if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Template'; }
+            }
+        }
+
+        // Upload template UI helpers
+        async function showUploadTemplateModal() {
+            if (!CaliusAuth.requireAuth()) return;
+            if (!CaliusAuth.hasPermission('manage_templates')) { alert('Permission required: manage_templates'); return; }
+            document.getElementById('template-zip-file').value = '';
+            document.getElementById('template-version').value = '';
+            document.getElementById('upload-progress').style.display = 'none';
+
+            // Show hint if uploadKey is default/empty
+            try {
+                await CaliusCMS.SettingsManager.load();
+                const uploadKey = CaliusCMS.SettingsManager.get('security.uploadKey') || '';
+                const hintEl = document.getElementById('upload-key-hint');
+                if (hintEl) {
+                    if (uploadKey === 'CHANGE_ME_UPLOAD_KEY' || uploadKey === '') {
+                        hintEl.innerHTML = `\n                            <div class="admin-alert warning">\n                                <div class="admin-alert-icon">⚠️</div>\n                                <div class="admin-alert-content">\n                                    <div class="admin-alert-title">Upload key is not configured</div>\n                                    <p>The upload key is currently the default placeholder (<code>CHANGE_ME_UPLOAD_KEY</code>). Template uploads require a valid upload key. Update it via Settings → Security or edit <code>/data/settings.json</code>.</p>\n                                </div>\n                            </div>\n                        `;
+                        hintEl.style.display = 'block';
+                    } else {
+                        hintEl.style.display = 'none';
+                        hintEl.innerHTML = '';
+                    }
+                }
+            } catch (e) { /* ignore */ }
+
+            document.getElementById('upload-modal').classList.add('active');
+        }
+
+        function closeUploadModal() { document.getElementById('upload-modal').classList.remove('active'); }
+
+        async function loadArtifacts() {
+            try {
+                const resp = await fetch('/admin/api/template-artifacts.php');
+                if (!resp.ok) throw new Error('Failed to load');
+                const json = await resp.json();
+                const container = document.getElementById('artifacts-list');
+                if (!json.entries || json.entries.length === 0) { container.innerHTML = '<em>No artifacts uploaded yet</em>'; return; }
+                container.innerHTML = json.entries.map(e => `
+                    <div style="display:flex; gap:1rem; align-items:center; padding:0.5rem; border-bottom:1px solid var(--border);">
+                        <div style="flex:2">
+                            <strong>${e.original_name}</strong><br>
+                            <small>Version: ${e.version || '-'} • Uploaded: ${e.uploaded_at}</small>
+                        </div>
+                        <div style="flex:1">${e.scan_result || 'unknown'}</div>
+                        <div style="flex:1"><small>Size: ${Math.round(e.size/1024)} KB</small></div>
+                        <div style="flex:1">${e.delivered ? '<span style="color:var(--success-color);">Delivered</span>' : '<small style="color:var(--text-secondary);">Not delivered</small>'}</div>
+                        <div style="display:flex; gap:0.5rem;">
+                            <a class="btn" href="/admin/api/template-artifact-download.php?id=${e.id}">Download</a>
+                            ${e.delivered ? '' : `<button class="btn" onclick="deliverArtifact('${e.id}')">Deliver</button>`}
+                            <button class="btn btn-danger" onclick="deleteArtifact('${e.id}')">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) { console.error(err); document.getElementById('artifacts-list').innerText = 'Failed to load artifacts'; }
+        }
+
+        async function uploadTemplate() {
+            const fileEl = document.getElementById('template-zip-file');
+            if (!fileEl.files || fileEl.files.length === 0) { alert('Please select a ZIP file'); return; }
+            const file = fileEl.files[0];
+            if (!file.name.toLowerCase().endsWith('.zip')) { alert('Only .zip files are allowed'); return; }
+            const form = new FormData();
+            form.append('file', file);
+            form.append('type', 'template');
+            const version = document.getElementById('template-version').value.trim();
+            if (version) form.append('version', version);
+
+            // Ensure settings are loaded and add optional uploadKey
+            await CaliusCMS.SettingsManager.load();
+            const uploadKey = CaliusCMS.SettingsManager.get('security.uploadKey') || '';
+            if (uploadKey) {
+                form.append('uploadKey', uploadKey);
+                headers['X-Upload-Key'] = uploadKey;
+            }
+
+            const progress = document.getElementById('upload-progress');
+            progress.style.display = 'block'; progress.innerText = 'Uploading...';
+
+            const headers = {};
+            if (window.CaliusCMS && window.CaliusCMS.auth && window.CaliusCMS.auth.csrfToken) headers['X-CSRF-Token'] = window.CaliusCMS.auth.csrfToken;
+
+            try {
+                const resp = await fetch('/admin/upload-handler.php', { method: 'POST', body: form, headers, credentials: 'same-origin' });
+                const json = await resp.json();
+                if (!resp.ok || !json.success) {
+                    // Special handling for upload-key error to help admins recover
+                    if (json && json.message && json.message.toLowerCase().includes('upload key')) {
+                        showUploadKeyErrorModal(json.message);
+                        progress.style.display = 'none';
+                        return;
+                    }
+                    alert('Upload failed: ' + (json.message || resp.statusText));
+                    progress.style.display = 'none';
+                    return;
+                }
+                progress.innerText = 'Upload succeeded';
+                closeUploadModal();
+                loadArtifacts();
+                CaliusCMS.showNotification('Template uploaded successfully', 'success');
+            } catch (err) { console.error(err); alert('Upload error'); progress.style.display='none'; }
+        }
+
+        async function checkStorageStatus() {
+            try {
+                const resp = await fetch('/admin/api/storage-status.php', { credentials: 'same-origin' });
+                const json = await resp.json();
+                if (!resp.ok || !json.success) throw new Error(json.message || 'Failed to check storage');
+                const s = json.storage;
+                const modal = document.createElement('div');
+                modal.className = 'admin-modal-overlay active';
+                modal.innerHTML = `
+                    <div class="admin-modal" style="max-width:700px;">
+                        <div class="admin-modal-header"><h3 class="admin-modal-title">Storage Status</h3></div>
+                        <div class="admin-modal-body">
+                            <p><strong>Artifacts path:</strong> <code>${s.artifacts_path}</code></p>
+                            <p><strong>Exists:</strong> ${s.exists ? 'Yes' : 'No'}</p>
+                            <p><strong>Writable:</strong> ${s.writable === null ? 'Unknown' : (s.writable ? 'Yes' : 'No')}</p>
+                            <p><strong>ZIP files:</strong> ${s.artifacts_count} (total ${Math.round((s.artifacts_size||0)/1024)} KB)</p>
+                            <p><strong>Metadata file:</strong> ${s.meta_exists ? 'Present' : 'Missing'} (${s.meta_entries} entries)</p>
+                        </div>
+                        <div class="admin-modal-footer">
+                            <button class="btn btn-secondary" onclick="this.closest('.admin-modal-overlay').remove()">Close</button>
+                            <button class="btn btn-primary" onclick="window.location.href='/admin/settings.html'">Open Settings</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            } catch (err) {
+                console.error(err);
+                alert('Failed to check storage: ' + (err.message || String(err)));
+            }
+        }
++
++        async function showRecentUploadFails() {
++            try {
++                const resp = await fetch('/admin/api/recent-upload-fails.php', { credentials: 'same-origin' });
++                const json = await resp.json();
++                if (!resp.ok || !json.success) throw new Error(json.message || 'Failed to fetch upload errors');
++                const entries = json.entries || [];
++                const modal = document.createElement('div');
++                modal.className = 'admin-modal-overlay active';
++                modal.innerHTML = `
++                    <div class="admin-modal" style="max-width:800px;">
++                        <div class="admin-modal-header"><h3 class="admin-modal-title">Recent Upload Failures</h3></div>
++                        <div class="admin-modal-body">
++                            ${entries.length === 0 ? '<p>No recent upload failures found.</p>' : entries.map(e => `
++                                <div style="border-bottom:1px solid var(--border); padding:0.5rem;">
++                                    <div><strong>${e.reason || e.event}</strong> — ${e.timestamp || e.uploaded_at || ''}</div>
++                                    <div style="font-size:0.9rem; color:var(--text-secondary);">User: ${e.session_user || e.user || '-'} • Authenticated: ${e.authenticated ? 'yes' : 'no'}</div>
++                                    <div style="margin-top:0.5rem; font-family:monospace; white-space:pre-wrap;">${JSON.stringify(e, null, 2)}</div>
++                                </div>
++                            `).join('')}
++                        </div>
++                        <div class="admin-modal-footer">
++                            <button class="btn btn-secondary" onclick="this.closest('.admin-modal-overlay').remove()">Close</button>
++                        </div>
++                    </div>
++                `;
++                document.body.appendChild(modal);
++            } catch (err) {
++                console.error(err);
++                alert('Failed to fetch upload errors: ' + (err.message || String(err)));
++            }
++        }
+*** End Patch
+
+        function showUploadKeyErrorModal(message) {
+            const modal = document.createElement('div');
+            modal.className = 'admin-modal-overlay active';
+            modal.innerHTML = `
+                <div class="admin-modal" style="max-width:600px;">
+                    <div class="admin-modal-header">
+                        <h3 class="admin-modal-title">Upload failed</h3>
+                        <button class="admin-modal-close" onclick="this.closest('.admin-modal-overlay').remove()">×</button>
+                    </div>
+                    <div class="admin-modal-body">
+                        <div class="admin-alert error">
+                            <div class="admin-alert-icon">⚠️</div>
+                            <div class="admin-alert-content">
+                                <div class="admin-alert-title">Upload key missing or invalid</div>
+                                <p>${message}</p>
+                                <p style="margin-top:0.5rem;">This usually means your server requires a secret upload key for unauthenticated uploads, or your admin session has expired. You can either:</p>
+                                <ul>
+                                    <li>Open <strong>Settings → Security</strong> and ensure the upload key is set or visible to you.</li>
+                                    <li>Re-login to refresh your admin session (if your session expired).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.admin-modal-overlay').remove()">Close</button>
+                        <button class="btn btn-primary" onclick="(function(){ window.location.href='/admin/settings.html'; })()">Open Settings</button>
+                        <button class="btn" onclick="(function(){ window.location.href='/admin/login.html'; })()">Re-login</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        async function deleteArtifact(id) {
+            if (!confirm('Delete this artifact? This cannot be undone.')) return;
+            const form = new FormData(); form.append('id', id);
+            const headers = {};
+            if (window.CaliusCMS && window.CaliusCMS.auth && window.CaliusCMS.auth.csrfToken) headers['X-CSRF-Token'] = window.CaliusCMS.auth.csrfToken;
+            try {
+                const resp = await fetch('/admin/api/delete-artifact.php', { method: 'POST', body: form, headers });
+                const json = await resp.json();
+                if (!resp.ok || !json.success) { alert('Delete failed: ' + (json.message || resp.statusText)); return; }
+                CaliusCMS.showNotification('Artifact deleted', 'success');
+                loadArtifacts();
+            } catch (err) { console.error(err); alert('Delete failed'); }
+        }
+        async function deliverArtifact(id) {
+            if (!confirm('Deliver this artifact to remote (GitHub Release)?')) return;
+            try {
+                const form = new FormData(); form.append('id', id);
+                const resp = await fetch('/admin/api/deliver-artifact.php', { method: 'POST', body: form, credentials: 'same-origin' });
+                const json = await resp.json();
+                if (!resp.ok || !json.success) { alert('Deliver failed: ' + (json.message || resp.statusText)); return; }
+                CaliusCMS.showNotification('Artifact delivered', 'success');
+                loadArtifacts();
+            } catch (err) { console.error(err); alert('Deliver failed'); }
+        }
+        
+        // Delete template
+        async function deleteTemplate(templateId) {
+            showConfirmModal('Are you sure you want to delete this template?', async () => {
+                try {
+                    await CaliusCMS.TemplateManager.delete(templateId);
+                    CaliusCMS.showNotification('Template deleted successfully', 'success');
+                    loadTemplates();
+                } catch (error) {
+                    console.error('Error deleting template:', error);
+                    CaliusCMS.showNotification('Error deleting template', 'error');
+                }
+            });
+        }
+
+        // Generic confirm modal helper
+        function showConfirmModal(message, onConfirm) {
+            const modal = document.createElement('div');
+            modal.className = 'admin-modal-overlay active';
+            modal.innerHTML = `
+                <div class="admin-modal">
+                    <div class="admin-modal-header">
+                        <h3 class="admin-modal-title">Confirm</h3>
+                    </div>
+                    <div class="admin-modal-body">
+                        <p>${message}</p>
+                    </div>
+                    <div class="admin-modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.admin-modal-overlay').remove()">Cancel</button>
+                        <button class="btn btn-danger" id="confirm-yes">Yes, Delete</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.querySelector('#confirm-yes').addEventListener('click', function() {
+                try { onConfirm(); } catch (e) { console.error(e); }
+                modal.remove();
+            });
+        }
+        
+        // Close modal
+        function closeTemplateModal() {
+            document.getElementById('template-modal').classList.remove('active');
+        }
+        
+        // Search and filter
+        document.getElementById('search-templates').addEventListener('input', filterTemplates);
+        document.getElementById('filter-category').addEventListener('change', filterTemplates);
+        document.getElementById('filter-status').addEventListener('change', filterTemplates);
+        
+        function filterTemplates() {
+            const search = document.getElementById('search-templates').value.toLowerCase();
+            const category = document.getElementById('filter-category').value;
+            const status = document.getElementById('filter-status').value;
+            
+            let filtered = allTemplates;
+            
+            if (search) {
+                filtered = filtered.filter(t => 
+                    t.name.en.toLowerCase().includes(search) ||
+                    t.name.id.toLowerCase().includes(search) ||
+                    t.slug.toLowerCase().includes(search)
+                );
+            }
+            
+            if (category) {
+                filtered = filtered.filter(t => t.category === category);
+            }
+            
+            if (status) {
+                filtered = filtered.filter(t => t.status === status);
+            }
+            
+            displayTemplates(filtered);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!CaliusAuth.requireAuth()) return;
+            // Disable add button if no permission (instead of hiding)
+            const addBtn = document.getElementById('add-template-btn');
+            if (addBtn && !CaliusAuth.hasPermission('manage_templates')) {
+                addBtn.disabled = true;
+                addBtn.title = 'Permission required: manage_templates';
+                addBtn.classList.add('btn-disabled');
+            }
+            loadTemplates();
+            // load uploaded artifacts and open upload modal if requested by hash
+            if (typeof loadArtifacts === 'function') loadArtifacts();
+            if (location.hash === '#upload') showUploadTemplateModal();
+        });
+    </script>
+    
+</body>
+</html>

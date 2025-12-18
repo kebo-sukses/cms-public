@@ -20,13 +20,139 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up PHP (for CodeQL PHP analysis)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: composer
+
+      - name: Download CodeQL CLI bundle (specific version with robust checks)
+        run: |
+          set -x
+          CODEQL_VERSION="v2.23.8"
+          # try canonical asset names: codeql.zip (preferred), fallback to codeql-linux64.zip
+          URLS=("https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_VERSION}/codeql.zip" "https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_VERSION}/codeql-linux64.zip")
+          echo "Attempting download from: ${URLS[*]}"
+          n=0
+          success=0
+          for URL in "${URLS[@]}"; do
+            echo "Trying $URL"
+            n=0
+            until [ "$n" -ge 3 ]; do
+              http_status=$(curl -sSL -w "%{http_code}" -D headers.txt -o codeql.zip "$URL" || echo 000)
+              echo "Download HTTP status: $http_status"
+              if [ "$http_status" = "200" ] && [ -s codeql.zip ]; then
+                echo "download successful from $URL"
+                success=1
+                break 2
+              fi
+              n=$((n+1))
+              echo "Retry $n/3..."
+              sleep 2
+            done
+          done
+          if [ "$success" -ne 1 ]; then
+            echo "All downloads failed; dumping headers and first bytes:"; cat headers.txt || true; head -c 512 codeql.zip | xxd || true
+          fi
+          echo "file info:"; file codeql.zip || true
+          if [ ! -s codeql.zip ]; then
+            echo "Download failed or produced empty file. Dumping headers and first bytes for debug:"; cat headers.txt || true; head -c 200 codeql.zip | xxd || true
+          fi
+          # Attempt to unzip; if unzip not available, use python fallback
+          if command -v unzip >/dev/null 2>&1; then
+            unzip -q codeql.zip || (echo "unzip failed; dumping first 200 bytes" && head -c 200 codeql.zip | xxd)
+          else
+            python - <<'PY'
+import zipfile, sys
+try:
+  with zipfile.ZipFile('codeql.zip') as z:
+    z.extractall()
+except Exception as e:
+  print('python unzip failed:', e)
+  sys.exit(0)
+PY
+          fi
+          echo "--- extraction result (pwd) ---"
+          ls -la || true
+          if [ -d codeql ]; then
+            echo "codeql directory exists; making cli executable"
+            chmod +x codeql/codeql || true
+            echo "Listing codeql directory:" > codeql-extract-listing.txt
+            ls -la codeql >> codeql-extract-listing.txt || true
+            echo "CodeQL CLI version (if available):" >> codeql-extract-listing.txt
+            ./codeql/codeql --version >> codeql-extract-listing.txt 2>&1 || true
+            echo "Installed packs (before):" >> codeql-extract-listing.txt
+            ./codeql/codeql pack list >> codeql-extract-listing.txt 2>&1 || true
+            echo "Resolving languages (before pack install):" >> codeql-extract-listing.txt
+            ./codeql/codeql resolve languages --format=json > codeql-langs.json 2>/dev/null || true
+            head -n 200 codeql-langs.json >> codeql-extract-listing.txt || true
+            # Try installing PHP pack if not present
+            if ! grep -q 'codeql/php-all' codeql-extract-listing.txt 2>/dev/null; then
+              echo "PHP pack not present, attempting pack install..." >> codeql-extract-listing.txt
+              ./codeql/codeql pack install codeql/php-all@latest || ./codeql/codeql pack install codeql/php-all@latest --no-verify || true
+              echo "Installed packs (after):" >> codeql-extract-listing.txt
+              ./codeql/codeql pack list >> codeql-extract-listing.txt 2>&1 || true
+              echo "Resolving languages (after pack install):" >> codeql-extract-listing.txt
+              ./codeql/codeql resolve languages --format=json > codeql-langs.json 2>/dev/null || true
+              head -n 200 codeql-langs.json >> codeql-extract-listing.txt || true
+            fi
+            # Deeper test: attempt to create a PHP database (non-fatal)
+            echo "Attempting test PHP database create (non-fatal)" >> codeql-extract-listing.txt
+            ./codeql/codeql database create codeql-db-php --language=php --source-root=. --no-build >> codeql-extract-listing.txt 2>&1 || true
+          else
+            echo "codeql directory not found after unzip" > codeql-extract-listing.txt
+            ls -la >> codeql-extract-listing.txt || true
+          fi
+          echo "$(pwd)/codeql" >> $GITHUB_PATH
+
+      - name: Upload CodeQL diagnostics artifact (non-fatal)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-diagnostics
+          path: |
+            codeql-extract-listing.txt
+            codeql-langs.json
+
+      - name: Ensure PHP CodeQL packs are installed (fallback)
+        run: |
+          # Ensure codeql CLI is available
+          if [ -x "./codeql/codeql" ]; then
+            ./codeql/codeql --version
+            ./codeql/codeql pack install codeql/php-all@latest || ./codeql/codeql pack install codeql/php-all@latest --no-verify
+          else
+            echo "codeql CLI not found; will rely on action's init to install packs"
+          fi
+
+      - name: Diagnose CodeQL language availability (non-fatal)
+        continue-on-error: true
+        run: |
+          echo "--- Diagnosing CodeQL languages ---"
+          if [ -x "./codeql/codeql" ]; then
+            echo "CodeQL CLI found at ./codeql/codeql"
+            set +e
+            ./codeql/codeql resolve languages --format=json > codeql-langs.json 2>/dev/null || true
+            echo "Contents of codeql-langs.json (trimmed):"
+            head -n 200 codeql-langs.json || true
+            if grep -q '"php"' codeql-langs.json 2>/dev/null; then
+              echo "php extractor is present in resolved languages"
+            else
+              echo "php extractor NOT present — attempting a test database create (non-fatal)"
+              ./codeql/codeql database create codeql-db-php --language=php --source-root=. || true
+            fi
+            set -e
+          else
+            echo "CodeQL CLI not found; cannot diagnose. Will rely on action's init step."
+          fi
+
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v4
         with:
           languages: php
+          packs: codeql/php-all@latest
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
+        uses: github/codeql-action/autobuild@v4
 
       - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v4

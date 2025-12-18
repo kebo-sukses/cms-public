@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Blog Manager - Calius Digital Admin</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+    
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-logo">Calius Admin</div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+            </div>
+            
+            <nav class="admin-nav">
+                <div class="admin-nav-section">
+                    <div class="admin-nav-title">Main</div>
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="/admin/index.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">📊</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/templates-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">🎨</span>
+                                <span>Templates</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/blog-manager.html" class="admin-nav-link active">
+                                <span class="admin-nav-icon">📝</span>
+                                <span>Blog Posts</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="/admin/orders-manager.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">🛒</span>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="admin-nav-section">
+                    <div class="admin-nav-title">Settings</div>
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="/admin/settings.html" class="admin-nav-link">
+                                <span class="admin-nav-icon">⚙️</span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link" onclick="CaliusAuth.logout(); return false;">
+                                <span class="admin-nav-icon">🚪</span>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="admin-header-left">
+                    <h1 class="admin-header-title">Blog Posts</h1>
+                </div>
+                
+                <div class="admin-header-right">
+                    <button class="btn btn-primary" id="create-post-btn" onclick="showCreatePostModal()">
+                        ➕ Create New Post
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="admin-content">
+                
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">All Blog Posts</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="blog-posts-table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Views</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                                            Loading...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/cms.js"></script>
+    
+    <script>
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+        
+        // Load blog posts
+        async function loadBlogPosts() {
+            try {
+                const posts = await CaliusCMS.BlogManager.loadAll();
+                const tbody = document.querySelector('#blog-posts-table tbody');
+                
+                if (posts.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                No blog posts yet. Click "Create New Post" to add one.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                function renderPostActions(post) {
+                    const canManage = CaliusAuth.hasPermission('manage_blog');
+                    const editClass = 'admin-table-btn edit' + (!canManage ? ' btn-disabled' : '');
+                    const delClass = 'admin-table-btn delete' + (!canManage ? ' btn-disabled' : '');
+                    const editBtn = `<button class="${editClass}" ${!canManage ? 'disabled title="Permission required: manage_blog"' : `onclick="editPost('${post.id}')"`}>Edit</button>`;
+                    const delBtn = `<button class="${delClass}" ${!canManage ? 'disabled title="Permission required: manage_blog"' : `onclick="deletePost('${post.id}')"`}>Delete</button>`;
+                    return editBtn + delBtn;
+                }
+
+                tbody.innerHTML = posts.map(post => `
+                    <tr>
+                        <td><strong>${post.title.en}</strong></td>
+                        <td>${post.category}</td>
+                        <td>
+                            <span class="admin-badge ${post.status === 'published' ? 'success' : 'warning'}">
+                                ${post.status}
+                            </span>
+                        </td>
+                        <td>${new Date(post.publishDate).toLocaleDateString()}</td>
+                        <td>${post.views}</td>
+                        <td class="admin-table-actions">
+                            ${renderPostActions(post)}
+                        </td>
+                    </tr>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                const tbody = document.querySelector('#blog-posts-table tbody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--error-color);">
+                            Error loading blog posts. Check console for details.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+        
+        // Show create post modal
+        function showCreatePostModal() {
+            if (!CaliusAuth.hasPermission('manage_blog')) {
+                alert('Permission required: manage_blog');
+                return;
+            }
+            alert('Create Post feature: Please update /data/blog.json manually via cPanel File Manager.\n\nSee the existing posts in blog.json for the correct format.');
+        }
+        
+        // Edit post
+        function editPost(postId) {
+            alert(`Edit Post ${postId}: Please update /data/blog.json manually via cPanel File Manager.`);
+        }
+        
+        // Delete post (with confirm modal)
+        function deletePost(postId) {
+            if (!CaliusAuth.hasPermission('manage_blog')) { alert('Permission required: manage_blog'); return; }
+            const modal = document.createElement('div');
+            modal.className = 'admin-modal-overlay active';
+            modal.innerHTML = `
+                <div class="admin-modal">
+                    <div class="admin-modal-header">
+                        <h3 class="admin-modal-title">Delete Post</h3>
+                    </div>
+                    <div class="admin-modal-body">
+                        <p>Are you sure you want to delete this post? This action cannot be undone.</p>
+                    </div>
+                    <div class="admin-modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.admin-modal-overlay').remove()">Cancel</button>
+                        <button class="btn btn-danger" id="confirm-delete-post">Delete</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.querySelector('#confirm-delete-post').addEventListener('click', function() {
+                alert(`Delete Post ${postId}: Please remove from /data/blog.json manually via cPanel File Manager.`);
+                modal.remove();
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!CaliusAuth.requireAuth()) return;
+
+            const createBtn = document.getElementById('create-post-btn');
+            if (createBtn && !CaliusAuth.hasPermission('manage_blog')) { createBtn.disabled = true; createBtn.title = 'Permission required: manage_blog'; createBtn.classList.add('btn-disabled'); }
+
+            loadBlogPosts();
+        });
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO Meta Tags -->
+    <title>Blog & Resources - Calius Digital</title>
+    <meta name="description" content="Tips, guides, and insights for web development. Learn about website templates, performance optimization, and best practices.">
+    <meta name="keywords" content="web development blog, website tips, template guides, performance optimization">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Blog & Resources - Calius Digital">
+    <meta property="og:description" content="Tips, guides, and insights for web development.">
+    <meta property="og:image" content="https://calius.digital/assets/images/og-image.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://calius.digital/blog">
+    
+    <style>
+        .blog-header {
+            padding-top: calc(var(--header-height) + var(--spacing-2xl));
+            padding-bottom: var(--spacing-2xl);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .blog-filters {
+            background-color: white;
+            padding: var(--spacing-lg) 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: var(--header-height);
+            z-index: 100;
+        }
+        
+        .blog-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .blog-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: var(--bg-secondary);
+        }
+        
+        .blog-card-content {
+            padding: var(--spacing-lg);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .blog-card-meta {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .blog-card-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .blog-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: var(--spacing-sm) 0;
+            color: var(--text-primary);
+        }
+        
+        .blog-card-excerpt {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: var(--spacing-md);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+        }
+        
+        .blog-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .blog-card-author {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 0.875rem;
+        }
+        
+        .blog-card-author-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .blog-card-read-time {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .featured-post {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .featured-post-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-2xl);
+        }
+        
+        .featured-post-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-height: 400px;
+        }
+        
+        .featured-post-text {
+            padding: var(--spacing-2xl);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .featured-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--warning-color);
+            color: white;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .sidebar {
+            position: sticky;
+            top: calc(var(--header-height) + var(--spacing-lg));
+        }
+        
+        .sidebar-widget {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .sidebar-widget-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+        
+        .category-list {
+            list-style: none;
+        }
+        
+        .category-list li {
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .category-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .category-list a {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+        
+        .category-list a:hover {
+            color: var(--primary-color);
+        }
+        
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+        
+        .tag {
+            padding: 0.25rem 0.75rem;
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+        
+        .tag:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .featured-post-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .featured-post-image {
+                min-height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Header / Navigation -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="/" class="logo">
+                <span>Calius Digital</span>
+            </a>
+            
+            <nav class="nav">
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link" data-i18n="nav.home">Home</a></li>
+                    <li><a href="/templates.html" class="nav-link" data-i18n="nav.templates">Templates</a></li>
+                    <li><a href="/blog.html" class="nav-link active" data-i18n="nav.blog">Blog</a></li>
+                    <li><a href="/about.html" class="nav-link" data-i18n="nav.about">About</a></li>
+                    <li><a href="/contact.html" class="nav-link" data-i18n="nav.contact">Contact</a></li>
+                </ul>
+                
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="id">ID</button>
+                </div>
+                
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Blog Header -->
+    <section class="blog-header">
+        <div class="container">
+            <h1 data-i18n="blog.title">Blog & Resources</h1>
+            <p data-i18n="blog.subtitle">Tips, guides, and insights for web development</p>
+        </div>
+    </section>
+
+    <!-- Blog Content -->
+    <section class="section">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 1fr 300px; gap: var(--spacing-2xl);">
+                <!-- Main Content -->
+                <div>
+                    <!-- Featured Post -->
+                    <div id="featured-post"></div>
+                    
+                    <!-- Blog Grid -->
+                    <div id="blog-grid" class="grid grid-2">
+                        <div class="loading-spinner" style="grid-column: 1 / -1;">
+                            <div class="loading" style="width: 40px; height: 40px; border-width: 4px;"></div>
+                            <p style="margin-top: 1rem;">Loading posts...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <aside class="sidebar hide-mobile">
+                    <!-- Search Widget -->
+                    <div class="sidebar-widget">
+                        <h3 class="sidebar-widget-title">Search</h3>
+                        <input type="text" id="blog-search" class="form-input" placeholder="Search posts...">
+                    </div>
+                    
+                    <!-- Categories Widget -->
+                    <div class="sidebar-widget">
+                        <h3 class="sidebar-widget-title">Categories</h3>
+                        <ul class="category-list" id="categories-list">
+                            <li><a href="#"><span>Loading...</span></a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Popular Tags Widget -->
+                    <div class="sidebar-widget">
+                        <h3 class="sidebar-widget-title">Popular Tags</h3>
+                        <div class="tag-cloud" id="tags-cloud">
+                            <span class="tag">Loading...</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-i18n="footer.about">About Calius Digital</h3>
+                    <p data-i18n="footer.about-text">Premium high-speed website templates for global market.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="footer.quick-links">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/" data-i18n="nav.home">Home</a></li>
+                        <li><a href="/templates.html" data-i18n="nav.templates">Templates</a></li>
+                        <li><a href="/blog.html" data-i18n="nav.blog">Blog</a></li>
+                        <li><a href="/about.html" data-i18n="nav.about">About</a></li>
+                        <li><a href="/contact.html" data-i18n="nav.contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="footer.support">Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" data-i18n="footer.faq">FAQ</a></li>
+                        <li><a href="#" data-i18n="footer.documentation">Documentation</a></li>
+                        <li><a href="#" data-i18n="footer.terms">Terms of Service</a></li>
+                        <li><a href="#" data-i18n="footer.privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="footer.newsletter">Newsletter</h3>
+                    <p data-i18n="footer.newsletter-text">Subscribe to get updates</p>
+                    <form id="newsletter-form" style="margin-top: 1rem;">
+                        <input type="email" class="form-input" placeholder="Your email" required>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;" data-i18n="footer.subscribe">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p data-i18n="footer.copyright">© 2024 Calius Digital. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/assets/js/language.js"></script>
+    <script src="/assets/js/lazy-load.js"></script>
+    <script src="/assets/js/main.js"></script>
+    
+    <script>
+        let allPosts = [];
+        let categories = [];
+        
+        // Load blog posts
+        async function loadBlogPosts() {
+            try {
+                const response = await fetch('/data/blog.json');
+                const data = await response.json();
+                allPosts = data.posts.filter(p => p.status === 'published');
+                categories = data.categories;
+                
+                displayFeaturedPost();
+                displayBlogPosts();
+                displayCategories();
+                displayTags();
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                document.getElementById('blog-grid').innerHTML = `
+                    <div class="no-results" style="grid-column: 1 / -1;">
+                        <p>Failed to load blog posts. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Display featured post
+        function displayFeaturedPost() {
+            const lang = window.LanguageManager.getLanguage();
+            const featuredPost = allPosts.find(p => p.featured);
+            
+            if (!featuredPost) return;
+            
+            document.getElementById('featured-post').innerHTML = `
+                <div class="featured-post">
+                    <div class="featured-post-content">
+                        <img src="${featuredPost.featuredImage}" alt="${featuredPost.title[lang]}" class="featured-post-image" loading="lazy">
+                        <div class="featured-post-text">
+                            <span class="featured-badge">Featured</span>
+                            <span class="blog-card-category">${featuredPost.category}</span>
+                            <h2 class="blog-card-title" style="font-size: 2rem;">${featuredPost.title[lang]}</h2>
+                            <p class="blog-card-excerpt" style="font-size: 1rem; -webkit-line-clamp: 4;">${featuredPost.excerpt[lang]}</p>
+                            <div class="blog-card-meta" style="margin-top: var(--spacing-md);">
+                                <span>📅 ${new Date(featuredPost.publishDate).toLocaleDateString()}</span>
+                                <span>⏱️ ${featuredPost.readTime} min read</span>
+                                <span>👁️ ${featuredPost.views} views</span>
+                            </div>
+                            <a href="/blog-detail.html?slug=${featuredPost.slug}" class="btn btn-primary" style="margin-top: var(--spacing-lg); width: fit-content;">
+                                Read More →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Display blog posts
+        function displayBlogPosts() {
+            const lang = window.LanguageManager.getLanguage();
+            const posts = allPosts.filter(p => !p.featured);
+            
+            const grid = document.getElementById('blog-grid');
+            
+            if (posts.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results" style="grid-column: 1 / -1;">
+                        <p>No blog posts found.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = posts.map(post => `
+                <div class="blog-card">
+                    <img src="${post.featuredImage}" alt="${post.title[lang]}" class="blog-card-image" loading="lazy">
+                    <div class="blog-card-content">
+                        <div class="blog-card-meta">
+                            <span>📅 ${new Date(post.publishDate).toLocaleDateString()}</span>
+                            <span>⏱️ ${post.readTime} min read</span>
+                        </div>
+                        <span class="blog-card-category">${post.category}</span>
+                        <h3 class="blog-card-title">${post.title[lang]}</h3>
+                        <p class="blog-card-excerpt">${post.excerpt[lang]}</p>
+                        <div class="blog-card-footer">
+                            <div class="blog-card-author">
+                                <img src="${post.authorImage}" alt="${post.author}" class="blog-card-author-img">
+                                <span>${post.author}</span>
+                            </div>
+                            <a href="/blog-detail.html?slug=${post.slug}" class="btn btn-sm btn-primary">
+                                Read More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Display categories
+        function displayCategories() {
+            const lang = window.LanguageManager.getLanguage();
+            const categoriesList = document.getElementById('categories-list');
+            
+            categoriesList.innerHTML = categories.map(cat => `
+                <li>
+                    <a href="#" data-category="${cat.slug}">
+                        <span>${cat.name[lang]}</span>
+                        <span>${cat.count}</span>
+                    </a>
+                </li>
+            `).join('');
+            
+            // Add click handlers
+            categoriesList.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const category = this.dataset.category;
+                    filterByCategory(category);
+                });
+            });
+        }
+        
+        // Display tags
+        function displayTags() {
+            const allTags = new Set();
+            allPosts.forEach(post => {
+                post.tags.forEach(tag => allTags.add(tag));
+            });
+            
+            const tagsCloud = document.getElementById('tags-cloud');
+            tagsCloud.innerHTML = Array.from(allTags).slice(0, 15).map(tag => `
+                <a href="#" class="tag" data-tag="${tag}">${tag}</a>
+            `).join('');
+            
+            // Add click handlers
+            tagsCloud.querySelectorAll('.tag').forEach(tag => {
+                tag.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tagName = this.dataset.tag;
+                    filterByTag(tagName);
+                });
+            });
+        }
+        
+        // Filter by category
+        function filterByCategory(category) {
+            const filtered = allPosts.filter(p => p.category.toLowerCase() === category.toLowerCase());
+            displayFilteredPosts(filtered);
+        }
+        
+        // Filter by tag
+        function filterByTag(tag) {
+            const filtered = allPosts.filter(p => p.tags.includes(tag));
+            displayFilteredPosts(filtered);
+        }
+        
+        // Display filtered posts
+        function displayFilteredPosts(posts) {
+            const lang = window.LanguageManager.getLanguage();
+            const grid = document.getElementById('blog-grid');
+            
+            grid.innerHTML = posts.map(post => `
+                <div class="blog-card">
+                    <img src="${post.featuredImage}" alt="${post.title[lang]}" class="blog-card-image" loading="lazy">
+                    <div class="blog-card-content">
+                        <div class="blog-card-meta">
+                            <span>📅 ${new Date(post.publishDate).toLocaleDateString()}</span>
+                            <span>⏱️ ${post.readTime} min read</span>
+                        </div>
+                        <span class="blog-card-category">${post.category}</span>
+                        <h3 class="blog-card-title">${post.title[lang]}</h3>
+                        <p class="blog-card-excerpt">${post.excerpt[lang]}</p>
+                        <div class="blog-card-footer">
+                            <div class="blog-card-author">
+                                <img src="${post.authorImage}" alt="${post.author}" class="blog-card-author-img">
+                                <span>${post.author}</span>
+                            </div>
+                            <a href="/blog-detail.html?slug=${post.slug}" class="btn btn-sm btn-primary">
+                                Read More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Search functionality
+        document.getElementById('blog-search')?.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            if (query.length < 2) {
+                displayBlogPosts();
+                return;
+            }
+            
+            const lang = window.LanguageManager.getLanguage();
+            const filtered = allPosts.filter(post => 
+                post.title[lang].toLowerCase().includes(query) ||
+                post.excerpt[lang].toLowerCase().includes(query) ||
+                post.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+            
+            displayFilteredPosts(filtered);
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadBlogPosts);
+    </script>
+    
+</body>
+</html>
