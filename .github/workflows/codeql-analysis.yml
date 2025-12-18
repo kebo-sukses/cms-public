@@ -20,6 +20,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up PHP (for CodeQL PHP analysis)
+        uses: shivammathur/setup-php@v3
+        with:
+          php-version: '8.0'
+          tools: composer
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
