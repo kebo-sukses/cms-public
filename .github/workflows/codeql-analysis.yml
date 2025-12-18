@@ -26,11 +26,31 @@ jobs:
           php-version: '8.0'
           tools: composer
 
-      - name: Download CodeQL CLI bundle (full)
+      - name: Download CodeQL CLI bundle (specific version with retries)
         run: |
-          curl -sL https://github.com/github/codeql-cli-binaries/releases/latest/download/codeql-bundle-linux64.tar.gz -o codeql.tar.gz
-          tar -xzf codeql.tar.gz
+          CODEQL_VERSION="v2.23.8"
+          URL="https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_VERSION}/codeql-bundle-linux64.tar.gz"
+          echo "Downloading CodeQL CLI bundle from $URL"
+          n=0
+          until [ "$n" -ge 3 ]; do
+            curl -sSL "$URL" -o codeql.tar.gz && break
+            n=$((n+1))
+            echo "Retry $n/3..."
+            sleep 2
+          done
+          file codeql.tar.gz || true
+          tar -xzf codeql.tar.gz || (echo "tar failed; dumping first 200 bytes for debug" && head -c 200 codeql.tar.gz | xxd)
           echo "$(pwd)/codeql" >> $GITHUB_PATH
+
+      - name: Ensure PHP CodeQL packs are installed (fallback)
+        run: |
+          # Ensure codeql CLI is available
+          if [ -x "./codeql/codeql" ]; then
+            ./codeql/codeql --version
+            ./codeql/codeql pack install codeql/php-all@latest || ./codeql/codeql pack install codeql/php-all@latest --no-verify
+          else
+            echo "codeql CLI not found; will rely on action's init to install packs"
+          fi
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
