@@ -52,6 +52,14 @@ except Exception as e:
   sys.exit(0)
 PY
           fi
+          echo "--- extraction result (pwd) ---"
+          ls -la || true
+          if [ -d codeql ]; then
+            echo "codeql directory exists; making cli executable"
+            chmod +x codeql/codeql || true
+          else
+            echo "codeql directory not found after unzip"
+          fi
           echo "$(pwd)/codeql" >> $GITHUB_PATH
 
       - name: Ensure PHP CodeQL packs are installed (fallback)
