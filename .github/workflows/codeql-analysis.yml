@@ -28,21 +28,32 @@ jobs:
 
       - name: Download CodeQL CLI bundle (specific version with robust checks)
         run: |
+          set -x
           CODEQL_VERSION="v2.23.8"
-          URL="https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_VERSION}/codeql-linux64.zip"
-          echo "Downloading CodeQL CLI bundle from $URL"
+          # try canonical asset names: codeql.zip (preferred), fallback to codeql-linux64.zip
+          URLS=("https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_VERSION}/codeql.zip" "https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_VERSION}/codeql-linux64.zip")
+          echo "Attempting download from: ${URLS[*]}"
           n=0
-          until [ "$n" -ge 3 ]; do
-            http_status=$(curl -sSL -w "%{http_code}" -D headers.txt -o codeql.zip "$URL" || echo 000)
-            echo "Download HTTP status: $http_status"
-            if [ "$http_status" = "200" ] && [ -s codeql.zip ]; then
-              echo "download successful"
-              break
-            fi
-            n=$((n+1))
-            echo "Retry $n/3..."
-            sleep 2
+          success=0
+          for URL in "${URLS[@]}"; do
+            echo "Trying $URL"
+            n=0
+            until [ "$n" -ge 3 ]; do
+              http_status=$(curl -sSL -w "%{http_code}" -D headers.txt -o codeql.zip "$URL" || echo 000)
+              echo "Download HTTP status: $http_status"
+              if [ "$http_status" = "200" ] && [ -s codeql.zip ]; then
+                echo "download successful from $URL"
+                success=1
+                break 2
+              fi
+              n=$((n+1))
+              echo "Retry $n/3..."
+              sleep 2
+            done
           done
+          if [ "$success" -ne 1 ]; then
+            echo "All downloads failed; dumping headers and first bytes:"; cat headers.txt || true; head -c 512 codeql.zip | xxd || true
+          fi
           echo "file info:"; file codeql.zip || true
           if [ ! -s codeql.zip ]; then
             echo "Download failed or produced empty file. Dumping headers and first bytes for debug:"; cat headers.txt || true; head -c 200 codeql.zip | xxd || true
