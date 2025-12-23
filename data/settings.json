@@ -115,7 +115,7 @@
     "lockoutDuration": 900,
     "passwordMinLength": 8,
     "requireStrongPassword": true,
-    "uploadKey": "CHANGE_ME_UPLOAD_KEY",
+    "uploadKey": "ad0954ed0292a4fad0df0d782fc64aa565099421a47e77237541641f0a7f95da",
     "uploadQuotaPerDay": 100,
     "virusScannerCmd": "",
     "artifactRetentionDays": 30,

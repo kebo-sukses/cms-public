@@ -7,3 +7,20 @@
 assets/images/uploads/
 assets/media/
 data/artifacts/
+
+# Composer dependencies
+/vendor/
+composer.lock
+
+# PHPUnit cache
+.phpunit.result.cache
+
+# Test artifacts
+tests/bin/
+
+# Runtime data files
+data/audit.json
+data/password_reset_tokens.json
+data/uploads_rate.json
+data/uploads_quota.json
+admin/data/
