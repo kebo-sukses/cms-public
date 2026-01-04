@@ -319,23 +319,24 @@ Gunakan checklist ini untuk memastikan uninstall lengkap:
 
 # 1. Verifikasi lokasi terlebih dahulu
 pwd
-# Output seharusnya: /home/username/public_html atau sejenisnya
+# Output seharusnya: /home/username/public_html atau ~/public_html
 
 # 2. List isi directory untuk memastikan ini adalah CMS directory
 ls -la
 
 # 3. Jika sudah yakin, coba dengan sudo (jika tersedia)
-cd ~/public_html && pwd && sudo rm -rf *
+# Gunakan && untuk memastikan cd berhasil sebelum rm
+cd ~/public_html && pwd && sudo rm -rf * || echo "ERROR: cd failed, rm not executed"
 
 # Atau ubah ownership terlebih dahulu (lebih aman)
-sudo chown -R $USER:$USER ~/public_html/
+sudo chown -R $USER:$USER ~/public_html/ && echo "Ownership changed successfully"
 
-# Kemudian hapus
-cd ~/public_html && rm -rf *
+# Kemudian hapus (pastikan cd berhasil)
+cd ~/public_html && pwd && rm -rf * || echo "ERROR: cd failed, rm not executed"
 
 # Jika masih gagal, ubah permission minimal yang diperlukan
-chmod -R u+w ~/public_html/  # Add write permission untuk user
-cd ~/public_html && rm -rf *
+chmod -R u+w ~/public_html/ && echo "Permissions updated"
+cd ~/public_html && pwd && rm -rf * || echo "ERROR: cd failed, rm not executed"
 ```
 
 Via cPanel:
@@ -417,9 +418,6 @@ Setelah uninstall, pastikan:
    ```
    
    **Catatan:** Path log bervariasi tergantung hosting provider. Tanyakan ke support hosting jika tidak yakin.
-   
-   # Gunakan path yang sesuai dengan hosting Anda
-   ```
 
 3. **Revoke API Access:**
    - Deactivate Stripe API keys
