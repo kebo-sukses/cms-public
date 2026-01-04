@@ -90,7 +90,7 @@ Ini adalah cara termudah dan tercepat untuk menghapus CMS.
 
 ### Metode 2: Via FTP Client
 
-Jika Anda prefer menggunakan FTP client seperti FileZilla.
+Jika Anda lebih suka menggunakan FTP client seperti FileZilla.
 
 #### Langkah-langkah:
 
@@ -325,14 +325,14 @@ pwd
 ls -la
 
 # 3. Jika sudah yakin, coba dengan sudo (jika tersedia)
-# Gunakan && untuk memastikan cd berhasil sebelum rm
-cd ~/public_html && pwd && sudo rm -rf * || echo "ERROR: cd failed, rm not executed"
+# SAFER: Gunakan absolute path untuk menghindari ekspansi * di directory salah
+sudo rm -rf ~/public_html/* || echo "ERROR: rm failed"
 
 # Atau ubah ownership terlebih dahulu (lebih aman)
 sudo chown -R $USER:$USER ~/public_html/ && echo "Ownership changed successfully"
 
-# Kemudian hapus (pastikan cd berhasil)
-cd ~/public_html && pwd && rm -rf * || echo "ERROR: cd failed, rm not executed"
+# Kemudian hapus dengan absolute path (safer)
+rm -rf ~/public_html/* || echo "ERROR: rm failed"
 
 # Jika masih gagal, ubah permission minimal yang diperlukan
 chmod -R u+w ~/public_html/ && echo "Permissions updated"
