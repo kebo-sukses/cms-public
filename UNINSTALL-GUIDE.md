@@ -153,11 +153,8 @@ Untuk pengguna advanced yang memiliki SSH access.
    cd ~/public_html
    rm -rf *
    
-   # Remove hidden files (gunakan method find yang aman)
+   # Remove hidden files (gunakan method find yang aman - RECOMMENDED)
    find . -maxdepth 1 -name ".*" -not -name "." -not -name ".." -exec rm -rf {} +
-   
-   # Atau gunakan ls dengan grep untuk lebih safety
-   ls -A | grep "^\." | xargs rm -rf
    ```
    
    **Opsi B: Hapus Selektif (Recommended)**
@@ -216,15 +213,18 @@ mysql -u username -p
 -- Show databases
 SHOW DATABASES;
 
--- Drop database (GANTI 'calius_cms' dengan nama database Anda yang sebenarnya)
+-- Drop database - GANTI 'YOUR_DATABASE_NAME' dengan nama database CMS Anda
 -- Gunakan IF EXISTS untuk menghindari error jika database tidak ada
-DROP DATABASE IF EXISTS calius_cms;
+DROP DATABASE IF EXISTS YOUR_DATABASE_NAME;  -- Contoh: calius_cms, cms_db, dsb.
 
 -- Exit
 EXIT;
 ```
 
-**Catatan:** Nama database `calius_cms` hanya contoh. Gunakan nama database yang sesuai dengan instalasi Anda.
+**Catatan Penting:** 
+- `YOUR_DATABASE_NAME` adalah placeholder - gunakan nama database yang sesuai dengan instalasi Anda
+- Jalankan `SHOW DATABASES;` terlebih dahulu untuk melihat daftar database yang ada
+- Pastikan Anda menghapus database yang benar!
 
 Via cPanel phpMyAdmin:
 1. Login ke cPanel
@@ -314,18 +314,28 @@ Gunakan checklist ini untuk memastikan uninstall lengkap:
 
 **Solusi:**
 ```bash
-# Via SSH, coba dengan sudo (jika tersedia)
-sudo rm -rf public_html/*
+# PERINGATAN: Selalu verifikasi path sebelum menggunakan sudo rm!
+# Pastikan Anda berada di directory yang benar
 
-# Atau ubah ownership terlebih dahulu
-sudo chown -R $USER:$USER public_html/
+# 1. Verifikasi lokasi terlebih dahulu
+pwd
+# Output seharusnya: /home/username/public_html atau sejenisnya
+
+# 2. List isi directory untuk memastikan ini adalah CMS directory
+ls -la
+
+# 3. Jika sudah yakin, coba dengan sudo (jika tersedia)
+cd ~/public_html && pwd && sudo rm -rf *
+
+# Atau ubah ownership terlebih dahulu (lebih aman)
+sudo chown -R $USER:$USER ~/public_html/
 
 # Kemudian hapus
-rm -rf public_html/*
+cd ~/public_html && rm -rf *
 
 # Jika masih gagal, ubah permission minimal yang diperlukan
-chmod -R u+w public_html/  # Add write permission untuk user
-rm -rf public_html/*
+chmod -R u+w ~/public_html/  # Add write permission untuk user
+cd ~/public_html && rm -rf *
 ```
 
 Via cPanel:
@@ -380,18 +390,33 @@ Setelah uninstall, pastikan:
    - Delete API keys
 
 2. **Clean Server Logs:**
-   ```bash
-   # CATATAN: Path log bervariasi tergantung hosting provider
-   # Contoh umum:
    
-   # cPanel hosting (paling umum)
+   **Langkah 1: Temukan lokasi log file Anda**
+   ```bash
+   # Check lokasi log files (jalankan salah satu):
+   ls -la ~/logs/
+   ls -la ~/public_html/logs/
+   ls -la /var/log/apache2/
+   ls -la /var/log/httpd/
+   ```
+   
+   **Langkah 2: Clear log files**
+   ```bash
+   # GANTI /path/to/your/logs/ dengan path yang sebenarnya dari Langkah 1
+   
+   # Contoh untuk cPanel hosting (umum):
    > ~/logs/access_log
    > ~/logs/error_log
    
-   # Atau cek lokasi sebenarnya:
-   # - ~/public_html/logs/
-   # - /var/log/apache2/
-   # - /var/log/httpd/
+   # Contoh untuk custom path:
+   > /path/to/your/logs/access.log
+   > /path/to/your/logs/error.log
+   
+   # Atau gunakan find untuk clear semua .log files:
+   find ~/logs/ -name "*.log" -type f -exec sh -c '> {}' \;
+   ```
+   
+   **Catatan:** Path log bervariasi tergantung hosting provider. Tanyakan ke support hosting jika tidak yakin.
    
    # Gunakan path yang sesuai dengan hosting Anda
    ```
