@@ -1,5 +1,12 @@
 # 🚀 Panduan Instalasi Cepat - Calius Digital
 
+📚 **Dokumentasi Terkait:**
+- [README.md](README.md) - Informasi umum tentang CMS
+- [UNINSTALL-GUIDE.md](UNINSTALL-GUIDE.md) - Panduan untuk menghapus/uninstall CMS
+- [TODO.md](TODO.md) - Progress development
+
+---
+
 ## ✅ Checklist Instalasi
 
 ### 1. Upload Files ke cPanel
