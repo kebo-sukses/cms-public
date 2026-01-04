@@ -65,7 +65,7 @@ Password: admin123
 
 ## 📝 License
 
-Proprietary - Calius Digital © 2024
+Proprietary - Calius Digital © 2026
 
 ## 🆘 Support
 

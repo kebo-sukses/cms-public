@@ -306,20 +306,25 @@ Gunakan checklist ini untuk memastikan uninstall lengkap:
 
 **Solusi:**
 ```bash
-# Via SSH, ubah permission terlebih dahulu
-chmod -R 777 public_html/
+# Via SSH, coba dengan sudo (jika tersedia)
+sudo rm -rf public_html/*
+
+# Atau ubah ownership terlebih dahulu
+sudo chown -R $USER:$USER public_html/
 
 # Kemudian hapus
 rm -rf public_html/*
 
-# Atau force delete
-rm -rf public_html/* 2>/dev/null
+# Jika masih gagal, ubah permission minimal yang diperlukan
+chmod -R u+w public_html/  # Add write permission untuk user
+rm -rf public_html/*
 ```
 
 Via cPanel:
 1. Select file yang tidak bisa dihapus
-2. Change Permissions → Set to 777
-3. Try delete again
+2. Change Permissions → Set to 755 (folders) atau 644 (files)
+3. Jika masih gagal, hubungi hosting support untuk bantuan
+4. **HINDARI menggunakan 777** karena membuka celah keamanan
 
 ### Masalah: .htaccess Menyebabkan Error
 
