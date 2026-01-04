@@ -153,12 +153,11 @@ Untuk pengguna advanced yang memiliki SSH access.
    cd ~/public_html
    rm -rf *
    
-   # Remove hidden files (gunakan salah satu method berikut)
-   # Method 1: Using dotglob
-   shopt -s dotglob && rm -rf .* && shopt -u dotglob
+   # Remove hidden files (gunakan method find yang aman)
+   find . -maxdepth 1 -name ".*" -not -name "." -not -name ".." -exec rm -rf {} +
    
-   # Method 2: Using find
-   find . -name ".*" -not -name "." -not -name ".." -exec rm -rf {} +
+   # Atau gunakan ls dengan grep untuk lebih safety
+   ls -A | grep "^\." | xargs rm -rf
    ```
    
    **Opsi B: Hapus Selektif (Recommended)**
@@ -218,7 +217,8 @@ mysql -u username -p
 SHOW DATABASES;
 
 -- Drop database (GANTI 'calius_cms' dengan nama database Anda yang sebenarnya)
-DROP DATABASE calius_cms;
+-- Gunakan IF EXISTS untuk menghindari error jika database tidak ada
+DROP DATABASE IF EXISTS calius_cms;
 
 -- Exit
 EXIT;
