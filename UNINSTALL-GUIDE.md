@@ -152,7 +152,13 @@ Untuk pengguna advanced yang memiliki SSH access.
    # PERINGATAN: Ini akan menghapus SEMUA file di public_html!
    cd ~/public_html
    rm -rf *
-   rm -rf .[^.]*  # Remove hidden files
+   
+   # Remove hidden files (gunakan salah satu method berikut)
+   # Method 1: Using dotglob
+   shopt -s dotglob && rm -rf .* && shopt -u dotglob
+   
+   # Method 2: Using find
+   find . -name ".*" -not -name "." -not -name ".." -exec rm -rf {} +
    ```
    
    **Opsi B: Hapus Selektif (Recommended)**
@@ -211,12 +217,14 @@ mysql -u username -p
 -- Show databases
 SHOW DATABASES;
 
--- Drop database
+-- Drop database (GANTI 'calius_cms' dengan nama database Anda yang sebenarnya)
 DROP DATABASE calius_cms;
 
 -- Exit
 EXIT;
 ```
+
+**Catatan:** Nama database `calius_cms` hanya contoh. Gunakan nama database yang sesuai dengan instalasi Anda.
 
 Via cPanel phpMyAdmin:
 1. Login ke cPanel
@@ -373,11 +381,19 @@ Setelah uninstall, pastikan:
 
 2. **Clean Server Logs:**
    ```bash
-   # Clear access logs
-   > ~/logs/access_log
+   # CATATAN: Path log bervariasi tergantung hosting provider
+   # Contoh umum:
    
-   # Clear error logs
+   # cPanel hosting (paling umum)
+   > ~/logs/access_log
    > ~/logs/error_log
+   
+   # Atau cek lokasi sebenarnya:
+   # - ~/public_html/logs/
+   # - /var/log/apache2/
+   # - /var/log/httpd/
+   
+   # Gunakan path yang sesuai dengan hosting Anda
    ```
 
 3. **Revoke API Access:**

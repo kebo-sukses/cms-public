@@ -48,8 +48,8 @@ cms-public/
 ├── scripts/            # Utility scripts
 ├── tests/              # Test files
 ├── index.html          # Homepage
-├── .htaccess          # Apache configuration
-└── README.md          # Dokumentasi ini
+├── .htaccess           # Apache configuration
+└── README.md           # Dokumentasi ini
 ```
 
 ## 🔐 Kredensial Default
